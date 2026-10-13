@@ -6,7 +6,7 @@
   <meta name="theme-color" content="#f74783">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-title" content="DANGO">
-  <meta name="dango-app" content="draw-v5-bigball-20261013">
+  <meta name="dango-app" content="draw-v6-responsive-20261013">
   <title>ガラガラ抽選 | DANGO</title>
   <link rel="icon" href="./dango_icon.png" type="image/png">
   <link rel="apple-touch-icon" href="./dango_icon.png">
@@ -40,6 +40,15 @@
     .notice{margin:18px auto 0;max-width:670px;border-radius:17px;background:#fff5d8;color:#8a703c;padding:14px 18px;font-size:13px;line-height:1.7}.error{background:#ffdee5;color:#a53464}.toast{position:fixed;bottom:18px;left:18px;right:18px;margin:auto;width:max-content;max-width:calc(100% - 36px);border-radius:16px;background:#573b49;color:#fff;padding:12px 20px;box-shadow:0 8px 30px #412c3677;font-size:13px;text-align:center;z-index:9}
     @keyframes rumble{0%{transform:translate(-3px,1px) rotate(-2deg)}100%{transform:translate(3px,-2px) rotate(2deg)}}@keyframes pop{0%{transform:scale(.75)}65%{transform:scale(1.075)}100%{transform:scale(1)}}
     @media(max-width:520px){.shell{padding:12px 10px 25px}.top{gap:8px}.brand{font-size:22px}.nav a,.nav button{padding:8px 10px;font-size:11px}.main{padding:20px 12px 23px;border-radius:25px;min-height:calc(100dvh - 98px)}.stage{min-height:0}.ball{width:calc(100vw - 48px);max-width:472px;border-width:7px}.ball .letter{font-size:clamp(32px,10vw,52px);margin-bottom:4px}.ball .number{font-size:clamp(112px,37vw,190px)}.ball.wait .number{font-size:clamp(84px,26vw,140px)}.ball.wait .letter{font-size:24px}.info strong{font-size:22px}}
+    /* v6: keep the larger portrait ball, but scale the landscape ball to ~60% of v5. 
+       Restrict by available screen height so landscape phones do not crop the circle. */
+    @media (orientation: landscape){
+      .ball{width:min(42vw, 434px, 60dvh);max-width:100%;border-width:clamp(5px, .7vw, 9px)}
+      .ball .letter{font-size:min(8.4vw, 59px, 8dvh);margin-bottom:5px}
+      .ball .number{font-size:min(21.6vw, 228px, 28dvh)}
+      .ball.wait .number{font-size:min(19.2vw, 202px, 26dvh)}
+      .ball.wait .letter{font-size:min(44px, 6dvh)}
+    }
     @media(prefers-reduced-motion:reduce){.ball.spin,.ball.pop{animation:none}.roll{transition:none}}
   </style>
 </head>
