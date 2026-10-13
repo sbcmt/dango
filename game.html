@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#f74783">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="DANGO">
+  <meta name="dango-app" content="draw-v4-20261013">
+  <title>ガラガラ抽選 | DANGO</title>
+  <link rel="icon" href="./dango_icon.png" type="image/png">
+  <link rel="apple-touch-icon" href="./dango_icon.png">
+  <link rel="manifest" href="./manifest.webmanifest">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@500;700;900&display=swap" rel="stylesheet">
+  <style>
+    :root{--pink:#f74783;--deep:#cf2968;--ink:#573b49;--sub:#947487;--gold:#ffc94e;--cream:#fffdf8;--mint:#d8f5be;--shadow:0 14px 40px #a84f7220}
+    *{box-sizing:border-box} [hidden]{display:none!important}
+    body{margin:0;color:var(--ink);font-family:'Zen Maru Gothic','Hiragino Maru Gothic ProN','Yu Gothic',sans-serif;font-weight:700;background:radial-gradient(circle at 13% 10%,#ffedba 0,transparent 30%),radial-gradient(circle at 92% 3%,#ffd9e8 0,transparent 33%),linear-gradient(160deg,#fff2f6,#fffdf8 65%);min-height:100vh;min-height:100dvh}
+    button,a{font:inherit;-webkit-tap-highlight-color:transparent}button{cursor:pointer;touch-action:manipulation}a{color:inherit;text-decoration:none}button:focus-visible,a:focus-visible{outline:3px solid #7552cf;outline-offset:4px}
+    .shell{max-width:1000px;margin:auto;padding:18px 18px max(30px,env(safe-area-inset-bottom))}
+    .top{display:flex;align-items:center;gap:12px;justify-content:space-between;flex-wrap:wrap}
+    .brand{font-size:25px;font-weight:900;letter-spacing:-.04em;white-space:nowrap;display:flex;gap:.01em;filter:drop-shadow(1px 3px 0 #fff)}.brand span:nth-child(1){color:#ef5893;transform:rotate(-7deg)}.brand span:nth-child(2){color:#e7a428;transform:rotate(5deg)}.brand span:nth-child(3){color:#61b884;transform:rotate(-5deg)}.brand span:nth-child(4){color:#9977cc;transform:rotate(6deg)}.brand span:nth-child(5){color:#ef9252;transform:rotate(-4deg)}
+    .nav{display:flex;align-items:center;gap:8px;flex-wrap:wrap}.nav a,.nav button{background:#fff;border:1px solid #f4dae4;border-radius:100px;padding:9px 13px;color:#a3476f;font-size:12px;font-weight:900;box-shadow:0 2px 5px #bb748c13}.nav button:disabled{opacity:.35;cursor:not-allowed}
+    .main{margin-top:15px;min-height:550px;background:#fffeffdf;border:2px solid white;border-radius:30px;box-shadow:var(--shadow);text-align:center;padding:21px clamp(14px,4vw,32px) 24px;display:flex;flex-direction:column;align-items:center}
+    .eyebrow{font-size:12px;letter-spacing:.13em;color:var(--deep);font-weight:900}.title{font-size:clamp(23px,4vw,31px);margin:6px 0 4px}.hint{color:var(--sub);font-size:13px;line-height:1.6;margin:0}
+    .tags{display:flex;justify-content:center;gap:9px;margin:13px 0 8px;flex-wrap:wrap}.tag{font-size:12px;padding:7px 11px;border-radius:100px;background:#fff2d8;color:#8f6540}.tag:nth-child(2){background:#f5eaff;color:#8d6599}
+    .stage{display:flex;align-items:center;justify-content:center;flex:1;width:100%;min-height:274px;padding:10px 0 5px}
+    .ball{width:clamp(220px,35vw,362px);height:clamp(220px,35vw,362px);min-width:220px;min-height:220px;border-radius:50%;border:7px solid #fff;display:flex;flex-direction:column;align-items:center;justify-content:center;position:relative;box-shadow:0 9px 0 #e7b4c9,0 18px 30px #b5678530,inset -10px -14px 25px #c7518630;background:radial-gradient(circle at 28% 19%,#fff 0,#ffecf5 23%,#ffa4c7 63%,#f16b9e 100%);transform:translateZ(0);overflow:hidden}
+    .ball:before{content:'';position:absolute;left:17%;top:12%;width:22%;height:12%;border-radius:50%;transform:rotate(-35deg);background:#ffffff9b;filter:blur(4px)}
+    .ball .letter{font-size:clamp(30px,7vw,49px);line-height:1;margin-bottom:4px;color:#8d2756;font-weight:900;text-shadow:0 2px #fff8}.ball .number{font-size:clamp(112px,18vw,190px);letter-spacing:-.085em;line-height:.95;font-weight:900;color:#fff;text-shadow:3px 6px 0 #b23f78,0 4px 19px #ce437170;padding-right:.08em;font-variant-numeric:tabular-nums}
+    .ball.wait .number{font-size:clamp(99px,24vw,168px)}.ball.wait .letter{font-size:22px}.ball.spin{animation:rumble .12s linear infinite alternate}.ball.pop{animation:pop .5s cubic-bezier(.2,1.9,.35,1)}
+    .ball.type-I{background:radial-gradient(circle at 28% 19%,white 0,#ffefbc 23%,#f8c85d 65%,#efa838 100%)}.ball.type-N{background:radial-gradient(circle at 28% 19%,white 0,#e6f9da 23%,#83d4a3 65%,#52b987 100%)}.ball.type-G{background:radial-gradient(circle at 28% 19%,white 0,#f4ebff 23%,#b6a1ee 65%,#997cdd 100%)}.ball.type-O{background:radial-gradient(circle at 28% 19%,white 0,#ffeedb 23%,#fab078 65%,#ed8b5b 100%)}
+    .stage-line{font-size:15px;color:#a64a75;min-height:25px;margin:0 0 13px}.stage-line strong{color:var(--deep)}
+    .roll{width:min(100%,460px);padding:16px 24px;border:0;border-radius:21px;background:linear-gradient(180deg,#fa649f,#ec347b);color:#fff;font-size:clamp(20px,5vw,26px);font-weight:900;box-shadow:0 7px 0 #bb2e67,0 15px 24px #ec50914b;transition:transform .13s,box-shadow .13s}.roll:not(:disabled):active{transform:translateY(5px);box-shadow:0 2px 0 #bb2e67}.roll:disabled{opacity:.6;cursor:not-allowed;box-shadow:none}
+    .info{margin-top:17px;display:flex;gap:12px;width:min(100%,460px)}.info>div{flex:1;border-radius:16px;padding:11px;background:#fff0f6}.info>div:nth-child(2){background:#fff2d8}.info small{display:block;color:#8c6176;font-size:11px}.info strong{font-size:25px;font-variant-numeric:tabular-nums}.subnav{margin-top:14px;display:flex;flex-wrap:wrap;justify-content:center;gap:12px}.subnav a,.subnav button{border:0;background:transparent;color:#aa5576;text-decoration:underline;font-size:13px;padding:8px;font-weight:900}.subnav button:disabled{opacity:.3}
+    .notice{margin:18px auto 0;max-width:670px;border-radius:17px;background:#fff5d8;color:#8a703c;padding:14px 18px;font-size:13px;line-height:1.7}.error{background:#ffdee5;color:#a53464}.toast{position:fixed;bottom:18px;left:18px;right:18px;margin:auto;width:max-content;max-width:calc(100% - 36px);border-radius:16px;background:#573b49;color:#fff;padding:12px 20px;box-shadow:0 8px 30px #412c3677;font-size:13px;text-align:center;z-index:9}
+    @keyframes rumble{0%{transform:translate(-3px,1px) rotate(-2deg)}100%{transform:translate(3px,-2px) rotate(2deg)}}@keyframes pop{0%{transform:scale(.75)}65%{transform:scale(1.075)}100%{transform:scale(1)}}
+    @media(max-width:520px){.shell{padding:12px 10px 25px}.top{gap:8px}.brand{font-size:22px}.nav a,.nav button{padding:8px 10px;font-size:11px}.main{padding:20px 12px 23px;border-radius:25px;min-height:calc(100dvh - 98px)}.stage{min-height:240px}.ball{width:min(64vw,290px);height:min(64vw,290px);min-width:220px;min-height:220px}.ball .number{font-size:125px}.info strong{font-size:22px}}
+    @media(prefers-reduced-motion:reduce){.ball.spin,.ball.pop{animation:none}.roll{transition:none}}
+  </style>
+</head>
+<body>
+<div class="shell">
+  <header class="top">
+    <a href="./index.html" class="brand" aria-label="DANGO カード選択へ"><span>D</span><span>A</span><span>N</span><span>G</span><span>O</span></a>
+    <nav class="nav" aria-label="ページ移動"><a href="./index.html" id="backToCards">‹ カード選択</a><a href="./history.html" id="historyNav">出た数字を見る ↗</a><button type="button" id="soundButton" aria-pressed="true">🔊 音 ON</button></nav>
+  </header>
+  <main class="main" id="gamePanel">
+    <div class="eyebrow">STEP 02 / BINGO TIME!</div>
+    <h1 class="title">ガラガラ抽選！</h1>
+    <p class="hint" id="guide">ボタンを押して、ビンゴを始めよう！</p>
+    <div class="tags"><span class="tag" id="speedLabel">⏱ 4秒で抽選</span><span class="tag" id="cardsLabel">🎟 0枚でプレイ</span></div>
+    <div class="stage">
+      <div class="ball wait" id="ball" aria-hidden="true"><div class="letter" id="ballLetter">LET'S</div><div class="number" id="ballNumber">GO!</div></div>
+    </div>
+    <div class="stage-line" id="resultLine" aria-live="polite">さあ、回してみよう！</div>
+    <button class="roll" id="rollButton" type="button">🎱 ガラガラ回す！</button>
+    <div class="info"><div><small>出た数字</small><strong id="drawCount">0 / 75</strong></div><div><small>残り</small><strong id="remainingCount">75 個</strong></div></div>
+    <div class="subnav"><a href="./history.html" id="historyLink">🔢 出た数字を確認する</a><button type="button" id="restartButton">↺ 最初からやり直す</button></div>
+  </main>
+  <div id="notice" class="notice" hidden></div>
+  <div id="toast" class="toast" role="status" hidden></div>
+</div>
+<script>
+'use strict';
+// Local-only DANGO draw: draw results are stored on this device, not synced between devices.
+const GAME_KEY='dango.gameSession.v1';
+const SPEED_KEY='dango.drawSpeedSeconds.v1'; // Future settings screen can set this to 2, 4 or 6.
+const SOUND_KEY='dango.soundEnabled.v1';
+const $=(id)=>document.getElementById(id);
+const groupOf=(n)=>'BINGO'[Math.floor((n-1)/15)];
+const labelOf=(n)=>groupOf(n)+'-'+n;
+const safeNum=(n)=>Number.isInteger(n)&&n>=1&&n<=75;
+let game=null,rolling=false,audioCtx=null,rattleTimer=null,timeoutId=null,animationFrame=0,toastTimeout=null;
+let soundEnabled=true, speedSeconds=4, updateBusy=false, updateAvailable=false;
+function readJSON(key){try{return JSON.parse(localStorage.getItem(key)||'null')}catch{return null}}
+function save(){try{localStorage.setItem(GAME_KEY,JSON.stringify(game));return true}catch{toast('端末に抽選データを保存できません。空き容量・保存設定をご確認ください。');return false}}
+function validGame(x){return x&&x.version===1&&Array.isArray(x.selectedCards)&&x.selectedCards.length>0&&x.selectedCards.every(n=>Number.isInteger(n)&&n>=1&&n<=250)&&new Set(x.selectedCards).size===x.selectedCards.length&&Array.isArray(x.drawn)&&x.drawn.every(safeNum)&&new Set(x.drawn).size===x.drawn.length&&(!x.pending||(safeNum(x.pending.number)&&!x.drawn.includes(x.pending.number)&&Number.isFinite(x.pending.startedAt))) }
+function toast(msg){$('toast').textContent=msg;$('toast').hidden=false;clearTimeout(toastTimeout);toastTimeout=setTimeout(()=>$('toast').hidden=true,3000)}
+function notice(msg,isError=false){$('notice').hidden=!msg;$('notice').textContent=msg;$('notice').classList.toggle('error',isError)}
+function loadPreferences(){try{soundEnabled=localStorage.getItem(SOUND_KEY)!=='false';const speed=Number(localStorage.getItem(SPEED_KEY));speedSeconds=[2,4,6].includes(speed)?speed:4}catch{}$('soundButton').textContent=soundEnabled?'🔊 音 ON':'🔇 音 OFF';$('soundButton').setAttribute('aria-pressed',String(soundEnabled));$('speedLabel').textContent=`⏱ ${speedSeconds}秒で抽選`}
+function updateCounter(){const count=game?game.drawn.length:0;$('drawCount').textContent=`${count} / 75`;$('remainingCount').textContent=`${75-count} 個`;if(game)$('cardsLabel').textContent=`🎟 ${game.selectedCards.length}枚でプレイ`}
+function displayNumber(n){const ball=$('ball');ball.className='ball pop type-'+groupOf(n);$('ballLetter').textContent=groupOf(n);$('ballNumber').textContent=String(n);$('resultLine').textContent=labelOf(n)+' が出ました！';$('guide').textContent='次の数字を出すときは、もう一度回してね！'}
+function displayWaiting(){$('ball').className='ball wait';$('ballLetter').textContent="LET'S";$('ballNumber').textContent='GO!';$('resultLine').textContent='さあ、回してみよう！';$('guide').textContent='ボタンを押して、ビンゴを始めよう！'}
+function refreshDisplay(){if(!game){$('rollButton').disabled=true;$('rollButton').textContent='カードを選んでね';$('restartButton').disabled=true;notice('カードが選択されていません。「カード選択」から使う番号を選び、「ゲームを始める」を押してください。',true);return}
+  updateCounter();$('restartButton').disabled=false;
+  if(game.drawn.length){displayNumber(game.drawn[game.drawn.length-1])}else{displayWaiting()}
+  const done=game.drawn.length===75;$('rollButton').disabled=done;$('rollButton').textContent=done?'🎉 75個すべて抽選完了！':'🎱 ガラガラ回す！';
+  if(done){$('guide').textContent='すべての数字が出ました！';$('resultLine').textContent='🎉 抽選完了！ おつかれさま！'}
+}
+function randomIndex(length){if(length<=1)return 0;const max=0x100000000;const limit=Math.floor(max/length)*length;const nums=new Uint32Array(1);let n;do{crypto.getRandomValues(nums);n=nums[0]}while(n>=limit);return n%length}
+function remainingNumbers(){const taken=new Set(game.drawn);if(game.pending)taken.add(game.pending.number);return Array.from({length:75},(_,i)=>i+1).filter(n=>!taken.has(n))}
+function soundContext(){if(!soundEnabled)return null;try{const C=window.AudioContext||window.webkitAudioContext;if(!C)return null;if(!audioCtx)audioCtx=new C();if(audioCtx.state!=='running')audioCtx.resume().catch(()=>{});return audioCtx}catch{return null}}
+function shortRattle(ctx){if(!ctx||ctx.state!=='running')return;
+  const when=ctx.currentTime;const len=.06;const buffer=ctx.createBuffer(1,Math.ceil(ctx.sampleRate*len),ctx.sampleRate);const data=buffer.getChannelData(0);
+  for(let i=0;i<data.length;i++){const fade=(1-i/data.length);data[i]=(Math.random()*2-1)*fade*fade}
+  const src=ctx.createBufferSource();src.buffer=buffer;
+  const filter=ctx.createBiquadFilter();filter.type='bandpass';filter.frequency.value=850+Math.random()*900;filter.Q.value=.7;
+  const gain=ctx.createGain();gain.gain.setValueAtTime(0,when);gain.gain.linearRampToValueAtTime(.18,when+.006);gain.gain.exponentialRampToValueAtTime(.001,when+len);
+  src.connect(filter);filter.connect(gain);gain.connect(ctx.destination);src.start(when);src.stop(when+len+.008);
+}
+function startRattle(){const ctx=soundContext();if(!ctx)return;shortRattle(ctx);rattleTimer=setInterval(()=>shortRattle(ctx),105)}
+function stopRattle(){if(rattleTimer!==null){clearInterval(rattleTimer);rattleTimer=null}}
+function finishSound(){const ctx=soundContext();if(!ctx||ctx.state!=='running')return;const t=ctx.currentTime;
+  [659.25,830.61,987.77].forEach((freq,i)=>{const osc=ctx.createOscillator();const g=ctx.createGain();osc.type='sine';osc.frequency.value=freq;g.gain.setValueAtTime(.001,t+i*.095);g.gain.exponentialRampToValueAtTime(.13,t+i*.095+.015);g.gain.exponentialRampToValueAtTime(.001,t+i*.095+.27);osc.connect(g);g.connect(ctx.destination);osc.start(t+i*.095);osc.stop(t+i*.095+.3)})
+}
+function cleanTimers(){stopRattle();clearTimeout(timeoutId);cancelAnimationFrame(animationFrame);rolling=false}
+function finishDraw(){if(!game||!game.pending)return;const number=game.pending.number;if(!safeNum(number)||game.drawn.includes(number)){cleanTimers();notice('保存済みの抽選データに異常があります。新しい抽選は停止しました。',true);return}
+  const previous=game.pending;game.drawn.push(number);game.pending=null;
+  if(!save()){game.drawn.pop();game.pending=previous;cleanTimers();notice('数字の保存に失敗しました。再読み込みせず、端末の保存設定をご確認ください。',true);return}
+  cleanTimers();['historyNav','historyLink'].forEach(id=>$(id).removeAttribute('aria-disabled'));refreshDisplay();finishSound();if(updateAvailable)reloadFresh();
+}
+function animateRoll(){if(!game||!game.pending)return;const elapsed=Date.now()-game.pending.startedAt, duration=game.pending.durationMs||4000;
+  if(elapsed>=duration){finishDraw();return}
+  const choices=remainingNumbers(); // Cosmetic numbers ONLY. The reserved true result is not shown early.
+  if(choices.length){const preview=choices[Math.floor(Math.random()*choices.length)];$('ball').className='ball spin type-'+groupOf(preview);$('ballLetter').textContent=groupOf(preview);$('ballNumber').textContent=String(preview)}else{$('ball').className='ball spin wait';$('ballLetter').textContent='NEXT';$('ballNumber').textContent='??'}
+  $('resultLine').textContent=`ガラガラ… あと${Math.max(1,Math.ceil((duration-elapsed)/1000))}秒！`;
+  const progress=elapsed/duration;const delay=progress>.85?185:progress>.62?110:65;
+  timeoutId=setTimeout(()=>animationFrame=requestAnimationFrame(animateRoll),delay)
+}
+function startDraw(){if(!game||rolling||game.pending||game.drawn.length>=75)return;
+  const remaining=remainingNumbers();if(!remaining.length)return;
+  const number=remaining[randomIndex(remaining.length)]; // Actual number selected uniformly and reserved BEFORE animation.
+  game.pending={number,startedAt:Date.now(),durationMs:speedSeconds*1000};
+  if(!save()){game.pending=null;return}
+  rolling=true;notice('');$('rollButton').disabled=true;$('rollButton').textContent='🎱 ガラガラ中…';$('historyNav').setAttribute('aria-disabled','true');$('historyLink').setAttribute('aria-disabled','true');$('restartButton').disabled=true;
+  startRattle();animateRoll();
+}
+function restorePending(){if(!game||!game.pending)return;
+  // An interrupted number is already reserved: resume its remaining time, never redraw it.
+  const remaining=(game.pending.startedAt+(game.pending.durationMs||4000))-Date.now();
+  if(remaining<=0){finishDraw();toast('途中だった抽選結果を復元しました。');return;}
+  rolling=true;$('rollButton').disabled=true;$('rollButton').textContent='🎱 ガラガラ中…';$('restartButton').disabled=true;
+  $('historyNav').setAttribute('aria-disabled','true');$('historyLink').setAttribute('aria-disabled','true');
+  animateRoll();toast('途中だった抽選を再開しました。音は次の抽選から鳴ります。');
+}
+function resetGame(){if(!game||rolling)return;if(!confirm('抽選したすべての数字を消して、最初からやり直しますか？ この操作は元に戻せません。'))return;
+  const old=game;game={version:1,selectedCards:[...old.selectedCards],drawn:[],pending:null,createdAt:Date.now()};if(!save()){game=old;return}notice('');refreshDisplay();toast('新しいゲームを始めました！')
+}
+$('rollButton').addEventListener('click',startDraw);
+$('restartButton').addEventListener('click',resetGame);
+$('soundButton').addEventListener('click',()=>{soundEnabled=!soundEnabled;try{localStorage.setItem(SOUND_KEY,String(soundEnabled))}catch{}loadPreferences();if(soundEnabled){soundContext();toast('音をONにしました')}else{stopRattle();toast('音をOFFにしました')}});
+for(const id of ['historyNav','historyLink','backToCards'])$(id).addEventListener('click',(e)=>{if(rolling){e.preventDefault();toast('抽選中です。数字が確定してから移動してください。')}});
+window.addEventListener('storage',(event)=>{if(event.key===GAME_KEY&&!rolling){const next=readJSON(GAME_KEY);if(validGame(next)){game=next;refreshDisplay()}}});
+window.addEventListener('pagehide',()=>{stopRattle();clearTimeout(timeoutId);cancelAnimationFrame(animationFrame)});
+// Update check is bypass-cache; defer refreshing until any roll has been committed.
+function reloadFresh(){const url=new URL(location.href);url.searchParams.set('dango_update',String(Date.now()));location.replace(url.href)}
+async function checkUpdates(){if(updateBusy||document.visibilityState==='hidden'||navigator.onLine===false)return;updateBusy=true;
+  try{const url=new URL('game.html',document.baseURI);url.searchParams.set('_fresh',String(Date.now()));const res=await fetch(url,{cache:'no-store'});if(!res.ok)return;
+    const source=await res.text();const remoteDoc=new DOMParser().parseFromString(source,'text/html');
+    const remoteCode=remoteDoc.querySelector('body script')?.textContent;
+    const currentCode=document.querySelector('body script')?.textContent;
+    const remoteStyle=remoteDoc.querySelector('style')?.textContent;
+    const currentStyle=document.querySelector('style')?.textContent;
+    if(remoteCode&&((remoteCode!==currentCode)||(remoteStyle!==currentStyle))){updateAvailable=true;if(!rolling)reloadFresh()}
+  }catch{}finally{updateBusy=false}}
+document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible'){if(game?.pending && Date.now()>=game.pending.startedAt+(game.pending.durationMs||4000))finishDraw();checkUpdates()}});
+window.addEventListener('focus',checkUpdates);
+loadPreferences();game=readJSON(GAME_KEY);
+if(!validGame(game)){game=null;refreshDisplay()}else{refreshDisplay();restorePending()}
+setInterval(checkUpdates,60000);
+</script>
+</body>
+</html>
