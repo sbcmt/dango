@@ -6,7 +6,8 @@
   <meta name="theme-color" content="#f74783">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-title" content="DANGO">
-  <meta name="dango-app" content="settings-v1-20261013">
+  <meta name="dango-app" content="settings-v9-stable-updates">
+  <meta name="dango-app-version" content="9">
   <title>ゲーム設定 | DANGO</title>
   <link rel="icon" href="./dango_icon.png" type="image/png">
   <link rel="apple-touch-icon" href="./dango_icon.png">
@@ -177,18 +178,37 @@
       }catch(err){stopPreview();$('saveStatus').textContent=err?.message||'効果音を再生できませんでした';$('saveStatus').classList.add('error')}
     });
     window.addEventListener('pagehide',stopPreview);
+    // 設定からの復帰は常に新しいURLで取得。古いindex.htmlに戻る問題を防止。
+    document.querySelectorAll('a').forEach(link=>{
+      const destination=link.getAttribute('href')||'';
+      if(destination.startsWith('./index.html') || destination.startsWith('./game.html')){
+        link.addEventListener('click',()=>{
+          const next=new URL(link.href);
+          next.searchParams.set('dango_nav',String(Date.now()));
+          link.href=next.href;
+        });
+      }
+    });
+    const SETTINGS_VERSION=9;
     let checkBusy=false;
+    const SETTING_ATTEMPT_KEY='dango.settingUpdateAttempt.v9';
     async function checkUpdate(){
       if(checkBusy||document.visibilityState==='hidden'||navigator.onLine===false)return;
       checkBusy=true;
       try{
-        const url=new URL('setting.html',document.baseURI);url.searchParams.set('_fresh',String(Date.now()));
+        const url=new URL('./setting.html',document.baseURI);url.searchParams.set('_fresh',String(Date.now()));
         const response=await fetch(url,{cache:'no-store'});if(!response.ok)return;
         const remote=new DOMParser().parseFromString(await response.text(),'text/html');
-        if(remote.querySelector('meta[name="dango-app"]')?.content!==document.querySelector('meta[name="dango-app"]')?.content){
-          if(previewTimer!==null)return;
-          const target=new URL(location.href);target.searchParams.set('dango_update',String(Date.now()));location.replace(target.href);
-        }
+        const remoteVersion=Number(remote.querySelector('meta[name="dango-app-version"]')?.content)||0;
+        if(remoteVersion<=SETTINGS_VERSION || previewTimer!==null)return;
+        let attempt=null;
+        try{attempt=JSON.parse(sessionStorage.getItem(SETTING_ATTEMPT_KEY)||'null')}catch{}
+        if(attempt?.version===remoteVersion && Date.now()-attempt.at<10*60*1000)return;
+        try{sessionStorage.setItem(SETTING_ATTEMPT_KEY,JSON.stringify({version:remoteVersion,at:Date.now()}))}catch{}
+        const target=new URL('./setting.html',document.baseURI);
+        target.searchParams.set('dango_build',String(remoteVersion));
+        target.searchParams.set('dango_update',String(Date.now()));
+        location.replace(target.href);
       }catch{}finally{checkBusy=false}
     }
     document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible')checkUpdate()});
