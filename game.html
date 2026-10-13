@@ -6,7 +6,7 @@
   <meta name="theme-color" content="#f74783">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-title" content="DANGO">
-  <meta name="dango-app" content="draw-v6-responsive-20261013">
+  <meta name="dango-app" content="draw-v7-reach-bingo-20261013">
   <title>ガラガラ抽選 | DANGO</title>
   <link rel="icon" href="./dango_icon.png" type="image/png">
   <link rel="apple-touch-icon" href="./dango_icon.png">
@@ -49,6 +49,37 @@
       .ball.wait .number{font-size:min(19.2vw, 202px, 26dvh)}
       .ball.wait .letter{font-size:min(44px, 6dvh)}
     }
+    /* v7: three buttons; neutral until the selected cards really have reach / bingo */
+    .action-row{display:grid;grid-template-columns:minmax(0,2.2fr) minmax(0,1fr) minmax(0,1fr);gap:10px;width:min(100%,720px);align-items:stretch}
+    .action-row .roll{width:100%;min-width:0;padding:15px 10px;font-size:clamp(15px,2.5vw,23px);border-radius:19px}
+    .roll-short{display:none}
+    .judge{border:2px solid #e3e0e5;border-radius:19px;background:linear-gradient(#eeedf0,#e4e3e8);color:#95909a;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;min-width:0;padding:8px 4px;cursor:not-allowed;box-shadow:none;transition:transform .15s,box-shadow .15s,background .15s}
+    .judge .judge-name{font-size:clamp(13px,1.9vw,18px);font-weight:900;white-space:nowrap}
+    .judge .judge-count{font-size:clamp(16px,2.5vw,25px);font-weight:900;line-height:1.05;font-variant-numeric:tabular-nums}
+    .judge.active{cursor:pointer;color:#694527;box-shadow:0 5px 0 #dbab36;transform:translateY(-3px);border-color:#ffdf7a;background:linear-gradient(#fff0b0,#ffd767)}
+    .judge.active.bingo{color:white;box-shadow:0 5px 0 #ad2f7a;border-color:#f49ccb;background:linear-gradient(#f683b5,#eb4592)}
+    .judge.active:active{transform:translateY(1px);box-shadow:0 1px 0 #b67d4c}
+    .judge.active.bingo:active{box-shadow:0 1px 0 #ad2f7a}
+    .judge:disabled{cursor:not-allowed}
+    .judge.active:focus-visible{outline:3px solid #8452bb;outline-offset:4px}
+    .info{width:min(100%,720px)}
+    .result-overlay{position:fixed;inset:0;z-index:50;display:flex;align-items:center;justify-content:center;padding:clamp(14px,3vw,28px);background:#332532aa;backdrop-filter:blur(5px);-webkit-backdrop-filter:blur(5px)}
+    .result-modal{position:relative;display:flex;flex-direction:column;width:min(100%,780px);max-height:min(88dvh,800px);overflow:hidden;border:4px solid #fff;border-radius:30px;background:linear-gradient(150deg,#fff5f8,#fffdf7);box-shadow:0 28px 85px #210c204f;padding:clamp(18px,3vw,30px);text-align:center}
+    .modal-close{position:absolute;top:12px;right:12px;border:0;border-radius:100px;background:#f3e7ee;color:#875976;width:44px;height:44px;display:grid;place-items:center;font-size:24px;font-weight:900}
+    .modal-eyebrow{font-size:13px;font-weight:900;letter-spacing:.12em;color:#b04476;margin:0 44px 3px}
+    .modal-title{font-size:clamp(30px,6vw,48px);font-weight:900;line-height:1.2;margin:0 40px 6px}
+    .modal-title.reach{color:#c18a24}.modal-title.bingo{color:#e3408b}
+    .modal-caption{color:#987789;font-size:clamp(12px,2.2vw,15px);line-height:1.6;margin:4px 12px 14px}
+    .result-list{display:grid;grid-template-columns:repeat(auto-fit,minmax(118px,1fr));align-content:start;gap:10px;overflow:auto;min-height:0;padding:4px 3px 14px;overscroll-behavior:contain}
+    .number-chip{border-radius:17px;padding:14px 9px;background:#fff1b3;color:#98622a;border:2px solid #ffdf77;font-weight:900;display:flex;align-items:center;justify-content:center;gap:4px;flex-direction:column;font-size:clamp(19px,4vw,30px);font-variant-numeric:tabular-nums}
+    .number-chip.reach{background:#ffe9ab;color:#8c641d;border-color:#fbd475}
+    .number-chip.bingo-new{background:linear-gradient(135deg,#ff79b0,#ee428e);color:#fff;border-color:#f7a7ce;box-shadow:0 4px 12px #ec4d9944}
+    .number-chip.bingo-old{background:#ecebef;color:#a2a0a8;border-color:#e0dde3}
+    .number-chip small{font-size:11px;line-height:1.1;letter-spacing:.02em}
+    .legend{display:flex;gap:16px;justify-content:center;flex-wrap:wrap;margin-top:12px;font-size:12px;color:#877383}
+    .legend i{display:inline-block;width:11px;height:11px;border-radius:50%;margin-right:4px;background:#f15397}.legend .past-dot{background:#b7b5bc}
+    @media(max-width:520px){.action-row{gap:6px;grid-template-columns:minmax(0,1.7fr) minmax(0,1fr) minmax(0,1fr)}.action-row .roll{font-size:17px;padding:11px 4px;border-radius:16px}.roll-long{display:none}.roll-short{display:inline}.judge{border-radius:16px;padding:7px 2px}.judge .judge-name{font-size:13px}.judge .judge-count{font-size:18px}.result-list{grid-template-columns:repeat(auto-fit,minmax(94px,1fr));gap:8px}.number-chip{padding:12px 4px;font-size:21px}.result-modal{border-radius:22px;padding:18px 12px}.info{gap:6px}}
+    @media(max-height:470px) and (orientation:landscape){.result-modal{max-height:94dvh;padding:9px 16px}.modal-eyebrow{font-size:10px}.modal-title{font-size:27px}.modal-caption{margin:0 8px 5px;font-size:12px}.number-chip{padding:7px 5px}.legend{margin-top:4px}.modal-close{top:5px;right:7px;width:34px;height:34px}.result-list{grid-template-columns:repeat(auto-fit,minmax(95px,1fr));gap:7px}}
     @media(prefers-reduced-motion:reduce){.ball.spin,.ball.pop{animation:none}.roll{transition:none}}
   </style>
 </head>
@@ -67,10 +98,24 @@
       <div class="ball wait" id="ball" aria-hidden="true"><div class="letter" id="ballLetter">LET'S</div><div class="number" id="ballNumber">GO!</div></div>
     </div>
     <div class="stage-line" id="resultLine" aria-live="polite">さあ、回してみよう！</div>
-    <button class="roll" id="rollButton" type="button">🎱 ガラガラ回す！</button>
+    <div class="action-row" aria-label="抽選・判定操作">
+      <button class="roll" id="rollButton" type="button"><span class="roll-long">🎱 ガラガラ回す！</span><span class="roll-short">🎱 回す！</span></button>
+      <button class="judge reach" id="reachButton" type="button" disabled><span class="judge-name">リーチ</span><strong class="judge-count" id="reachCount">0</strong></button>
+      <button class="judge bingo" id="bingoButton" type="button" disabled><span class="judge-name">ビンゴ</span><strong class="judge-count" id="bingoCount">0</strong></button>
+    </div>
     <div class="info"><div><small>出た数字</small><strong id="drawCount">0 / 75</strong></div><div><small>残り</small><strong id="remainingCount">75 個</strong></div></div>
     <div class="subnav"><a href="./history.html" id="historyLink">🔢 出た数字を確認する</a><button type="button" id="restartButton">↺ 最初からやり直す</button></div>
   </main>
+  <div id="resultOverlay" class="result-overlay" hidden>
+    <section class="result-modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle" aria-describedby="modalCaption">
+      <button class="modal-close" id="closeResults" type="button" aria-label="閉じる">×</button>
+      <div class="modal-eyebrow" id="modalEyebrow">DANGO / RESULTS</div>
+      <h2 class="modal-title" id="modalTitle">リーチ</h2>
+      <p class="modal-caption" id="modalCaption"></p>
+      <div class="result-list" id="resultList" role="list"></div>
+      <div class="legend" id="bingoLegend" hidden><span><i></i>今回ビンゴ</span><span><i class="past-dot"></i>過去のビンゴ</span></div>
+    </section>
+  </div>
   <div id="notice" class="notice" hidden></div>
   <div id="toast" class="toast" role="status" hidden></div>
 </div>
@@ -92,13 +137,124 @@ function validGame(x){return x&&x.version===1&&Array.isArray(x.selectedCards)&&x
 function toast(msg){$('toast').textContent=msg;$('toast').hidden=false;clearTimeout(toastTimeout);toastTimeout=setTimeout(()=>$('toast').hidden=true,3000)}
 function notice(msg,isError=false){$('notice').hidden=!msg;$('notice').textContent=msg;$('notice').classList.toggle('error',isError)}
 function loadPreferences(){try{soundEnabled=localStorage.getItem(SOUND_KEY)!=='false';const speed=Number(localStorage.getItem(SPEED_KEY));speedSeconds=[2,4,6].includes(speed)?speed:4}catch{}$('soundButton').textContent=soundEnabled?'🔊 音 ON':'🔇 音 OFF';$('soundButton').setAttribute('aria-pressed',String(soundEnabled));$('speedLabel').textContent=`⏱ ${speedSeconds}秒で抽選`}
+const CARD_URL='./cards.json';
+let cardGrids=new Map(), cardsReady=false, judgeState={reach:[],bingo:[],justBingo:[]};
+let modalFocusReturn=null;
+// Validate actual photos' transcribed 5x5 grids. Never compute a result using missing/invalid card data.
+function validGrid(grid){
+  if(!Array.isArray(grid)||grid.length!==5||!grid.every(row=>Array.isArray(row)&&row.length===5)||grid[2][2]!==null)return false;
+  const taken=new Set();
+  for(let r=0;r<5;r++)for(let c=0;c<5;c++){
+    if(r===2&&c===2)continue;
+    const n=grid[r][c];if(!Number.isInteger(n)||n<c*15+1||n>(c+1)*15||taken.has(n))return false;taken.add(n);
+  }
+  return taken.size===24;
+}
+function bingoLines(grid){
+  const lines=[];
+  for(let r=0;r<5;r++)lines.push(grid[r]);
+  for(let c=0;c<5;c++)lines.push(grid.map(row=>row[c]));
+  lines.push(grid.map((row,r)=>row[r]));
+  lines.push(grid.map((row,r)=>row[4-r]));
+  return lines;
+}
+function getBoardState(grid,called){
+  let reach=false;
+  for(const line of bingoLines(grid)){
+    let missing=0;
+    for(const n of line)if(n!==null&&!called.has(n))missing++;
+    if(missing===0)return 'bingo';
+    if(missing===1)reach=true;
+  }
+  return reach?'reach':'none';
+}
+function judgeAt(numbers){
+  const called=new Set(numbers),reach=[],bingo=[];
+  if(!game||!cardsReady)return {reach,bingo};
+  for(const id of game.selectedCards){
+    const grid=cardGrids.get(id);if(!grid)continue;
+    const status=getBoardState(grid,called);
+    if(status==='bingo')bingo.push(id);
+    else if(status==='reach')reach.push(id);
+  }
+  reach.sort((a,b)=>a-b);bingo.sort((a,b)=>a-b);
+  return {reach,bingo};
+}
+function refreshJudge(){
+  const current=judgeAt(game?.drawn||[]);
+  const previous=judgeAt(game?.drawn.slice(0,-1)||[]);
+  const priorSet=new Set(previous.bingo);
+  judgeState={...current,justBingo:current.bingo.filter(id=>!priorSet.has(id))};
+  for(const [name,elementId] of [['reach','reachButton'],['bingo','bingoButton']]){
+    const count=judgeState[name].length,btn=$(elementId);
+    $(name+'Count').textContent=count;
+    btn.classList.toggle('active',count>0&&cardsReady);
+    btn.disabled=!cardsReady||!game||rolling||count===0;
+    btn.setAttribute('aria-label',`${name==='reach'?'リーチ':'ビンゴ'} ${count}枚。${count?'一覧を開く':'まだありません'}`);
+  }
+}
+async function loadCardGrids(){
+  cardsReady=false;refreshJudge();
+  if(!game)return;
+  try{
+    const url=new URL(CARD_URL,document.baseURI);url.searchParams.set('_fresh',String(Date.now()));
+    const response=await fetch(url,{cache:'no-store'});
+    if(!response.ok)throw Error('cards.jsonを取得できません (HTTP '+response.status+')');
+    const data=await response.json();if(!Array.isArray(data.cards))throw Error('cards.jsonの形式が違います');
+    const next=new Map();for(const c of data.cards){
+      if(!c||!Number.isInteger(c.id)||next.has(c.id)||!validGrid(c.grid))throw Error('カードデータの数字に問題があります。No.'+(c?.id||'?'));
+      next.set(c.id,c.grid);
+    }
+    const absent=game.selectedCards.filter(id=>!next.has(id));
+    if(absent.length)throw Error('選択カードのデータが不足しています: No.'+absent.join(', No.'));
+    cardGrids=next;cardsReady=true;notice('');refreshJudge();
+    refreshDisplay();
+  }catch(err){
+    cardsReady=false;cardGrids.clear();refreshJudge();
+    notice('判定に必要なカードデータを確認できません。安全のため抽選を停止しました。'+(err?.message||''),true);
+    refreshDisplay();
+  }
+}
+function setRollText(text,shortText){$('rollButton').innerHTML=`<span class="roll-long">${text}</span><span class="roll-short">${shortText||text}</span>`}
+function showResults(kind){
+  if(!game||rolling||!cardsReady||!judgeState[kind].length)return;
+  const list=$('resultList');list.replaceChildren();
+  const isBingo=kind==='bingo',ids=judgeState[kind];
+  $('modalEyebrow').textContent=isBingo?'🎉 BINGO RESULTS':'✨ REACH NOW';
+  $('modalTitle').textContent=isBingo?'ビンゴ！':'リーチ！';
+  $('modalTitle').className='modal-title '+kind;
+  $('modalCaption').textContent=isBingo?`ビンゴになったカード ${ids.length}枚（今回 ${judgeState.justBingo.length}枚）`:`現在リーチ中のカード ${ids.length}枚。ビンゴ成立カードは除外しています。`;
+  $('bingoLegend').hidden=!isBingo;
+  const just=new Set(judgeState.justBingo);
+  const ordered=isBingo?[...ids].sort((a,b)=>Number(just.has(b))-Number(just.has(a))||a-b):ids;
+  for(const id of ordered){
+    const item=document.createElement('div');item.setAttribute('role','listitem');
+    const isNew=isBingo&&just.has(id);
+    item.className='number-chip '+(isBingo?(isNew?'bingo-new':'bingo-old'):'reach');
+    const num=document.createElement('span');num.textContent='No.'+String(id).padStart(3,'0');item.appendChild(num);
+    if(isBingo){const caption=document.createElement('small');caption.textContent=isNew?'今回のビンゴ！':'過去のビンゴ';item.appendChild(caption)}
+    list.appendChild(item);
+  }
+  modalFocusReturn=document.activeElement;
+  $('resultOverlay').hidden=false;$('closeResults').focus();
+}
+function closeResults(){if($('resultOverlay').hidden)return;$('resultOverlay').hidden=true;modalFocusReturn?.focus?.();modalFocusReturn=null}
+$('reachButton').addEventListener('click',()=>showResults('reach'));
+$('bingoButton').addEventListener('click',()=>showResults('bingo'));
+$('closeResults').addEventListener('click',closeResults);
+$('resultOverlay').addEventListener('click',event=>{if(event.target===$('resultOverlay'))closeResults()});
+document.addEventListener('keydown',event=>{
+  if($('resultOverlay').hidden)return;
+  if(event.key==='Escape'){event.preventDefault();closeResults()}
+  if(event.key==='Tab'){event.preventDefault();$('closeResults').focus()}
+});
 function updateCounter(){const count=game?game.drawn.length:0;$('drawCount').textContent=`${count} / 75`;$('remainingCount').textContent=`${75-count} 個`;if(game)$('cardsLabel').textContent=`🎟 ${game.selectedCards.length}枚でプレイ`}
 function displayNumber(n){const ball=$('ball');ball.className='ball pop type-'+groupOf(n);$('ballLetter').textContent=groupOf(n);$('ballNumber').textContent=String(n);$('resultLine').textContent=labelOf(n)+' が出ました！';$('guide').textContent='次の数字を出すときは、もう一度回してね！'}
 function displayWaiting(){$('ball').className='ball wait';$('ballLetter').textContent="LET'S";$('ballNumber').textContent='GO!';$('resultLine').textContent='さあ、回してみよう！';$('guide').textContent='ボタンを押して、ビンゴを始めよう！'}
-function refreshDisplay(){if(!game){$('rollButton').disabled=true;$('rollButton').textContent='カードを選んでね';$('restartButton').disabled=true;notice('カードが選択されていません。「カード選択」から使う番号を選び、「ゲームを始める」を押してください。',true);return}
+function refreshDisplay(){if(!game){$('rollButton').disabled=true;setRollText('カードを選んでね','カード未選択');$('restartButton').disabled=true;refreshJudge();notice('カードが選択されていません。「カード選択」から使う番号を選び、「ゲームを始める」を押してください。',true);return}
   updateCounter();$('restartButton').disabled=false;
   if(game.drawn.length){displayNumber(game.drawn[game.drawn.length-1])}else{displayWaiting()}
-  const done=game.drawn.length===75;$('rollButton').disabled=done;$('rollButton').textContent=done?'🎉 75個すべて抽選完了！':'🎱 ガラガラ回す！';
+  const done=game.drawn.length===75;$('rollButton').disabled=done||!cardsReady||rolling;setRollText(done?'🎉 75個すべて抽選完了！':cardsReady?'🎱 ガラガラ回す！':'⏳ カード読込中',done?'抽選完了！':cardsReady?'🎱 回す！':'読込中');refreshJudge();
   if(done){$('guide').textContent='すべての数字が出ました！';$('resultLine').textContent='🎉 抽選完了！ おつかれさま！'}
 }
 function randomIndex(length){if(length<=1)return 0;const max=0x100000000;const limit=Math.floor(max/length)*length;const nums=new Uint32Array(1);let n;do{crypto.getRandomValues(nums);n=nums[0]}while(n>=limit);return n%length}
@@ -121,7 +277,7 @@ function cleanTimers(){stopRattle();clearTimeout(timeoutId);cancelAnimationFrame
 function finishDraw(){if(!game||!game.pending)return;const number=game.pending.number;if(!safeNum(number)||game.drawn.includes(number)){cleanTimers();notice('保存済みの抽選データに異常があります。新しい抽選は停止しました。',true);return}
   const previous=game.pending;game.drawn.push(number);game.pending=null;
   if(!save()){game.drawn.pop();game.pending=previous;cleanTimers();notice('数字の保存に失敗しました。再読み込みせず、端末の保存設定をご確認ください。',true);return}
-  cleanTimers();['historyNav','historyLink'].forEach(id=>$(id).removeAttribute('aria-disabled'));refreshDisplay();finishSound();if(updateAvailable)reloadFresh();
+  cleanTimers();['historyNav','historyLink'].forEach(id=>$(id).removeAttribute('aria-disabled'));refreshDisplay();if(judgeState.justBingo.length){$('resultLine').textContent=`🎉 今回 ${judgeState.justBingo.length}枚がビンゴ！`;toast(`🎉 BINGO！ No.${judgeState.justBingo.map(id=>String(id).padStart(3,'0')).join('・No.')}`)}finishSound();if(updateAvailable)reloadFresh();
 }
 function animateRoll(){if(!game||!game.pending)return;const elapsed=Date.now()-game.pending.startedAt, duration=game.pending.durationMs||4000;
   if(elapsed>=duration){finishDraw();return}
@@ -131,30 +287,30 @@ function animateRoll(){if(!game||!game.pending)return;const elapsed=Date.now()-g
   const progress=elapsed/duration;const delay=progress>.85?185:progress>.62?110:65;
   timeoutId=setTimeout(()=>animationFrame=requestAnimationFrame(animateRoll),delay)
 }
-function startDraw(){if(!game||rolling||game.pending||game.drawn.length>=75)return;
+function startDraw(){if(!game||!cardsReady||rolling||game.pending||game.drawn.length>=75)return;closeResults();
   const remaining=remainingNumbers();if(!remaining.length)return;
   const number=remaining[randomIndex(remaining.length)]; // Actual number selected uniformly and reserved BEFORE animation.
   game.pending={number,startedAt:Date.now(),durationMs:speedSeconds*1000};
   if(!save()){game.pending=null;return}
-  rolling=true;notice('');$('rollButton').disabled=true;$('rollButton').textContent='🎱 ガラガラ中…';$('historyNav').setAttribute('aria-disabled','true');$('historyLink').setAttribute('aria-disabled','true');$('restartButton').disabled=true;
+  rolling=true;notice('');$('rollButton').disabled=true;setRollText('🎱 ガラガラ中…','ガラガラ中');refreshJudge();$('historyNav').setAttribute('aria-disabled','true');$('historyLink').setAttribute('aria-disabled','true');$('restartButton').disabled=true;
   startRattle();animateRoll();
 }
 function restorePending(){if(!game||!game.pending)return;
   // An interrupted number is already reserved: resume its remaining time, never redraw it.
   const remaining=(game.pending.startedAt+(game.pending.durationMs||4000))-Date.now();
   if(remaining<=0){finishDraw();toast('途中だった抽選結果を復元しました。');return;}
-  rolling=true;$('rollButton').disabled=true;$('rollButton').textContent='🎱 ガラガラ中…';$('restartButton').disabled=true;
+  rolling=true;$('rollButton').disabled=true;setRollText('🎱 ガラガラ中…','ガラガラ中');refreshJudge();$('restartButton').disabled=true;
   $('historyNav').setAttribute('aria-disabled','true');$('historyLink').setAttribute('aria-disabled','true');
   animateRoll();toast('途中だった抽選を再開しました。音は次の抽選から鳴ります。');
 }
 function resetGame(){if(!game||rolling)return;if(!confirm('抽選したすべての数字を消して、最初からやり直しますか？ この操作は元に戻せません。'))return;
-  const old=game;game={version:1,selectedCards:[...old.selectedCards],drawn:[],pending:null,createdAt:Date.now()};if(!save()){game=old;return}notice('');refreshDisplay();toast('新しいゲームを始めました！')
+  closeResults();const old=game;game={version:1,selectedCards:[...old.selectedCards],drawn:[],pending:null,createdAt:Date.now()};if(!save()){game=old;return}notice('');refreshDisplay();toast('新しいゲームを始めました！')
 }
 $('rollButton').addEventListener('click',startDraw);
 $('restartButton').addEventListener('click',resetGame);
 $('soundButton').addEventListener('click',()=>{soundEnabled=!soundEnabled;try{localStorage.setItem(SOUND_KEY,String(soundEnabled))}catch{}loadPreferences();if(soundEnabled){soundContext();toast('音をONにしました')}else{stopRattle();toast('音をOFFにしました')}});
 for(const id of ['historyNav','historyLink','backToCards'])$(id).addEventListener('click',(e)=>{if(rolling){e.preventDefault();toast('抽選中です。数字が確定してから移動してください。')}});
-window.addEventListener('storage',(event)=>{if(event.key===GAME_KEY&&!rolling){const next=readJSON(GAME_KEY);if(validGame(next)){game=next;refreshDisplay()}}});
+window.addEventListener('storage',(event)=>{if(event.key===GAME_KEY&&!rolling){const next=readJSON(GAME_KEY);if(validGame(next)){const selectedChanged=game?.selectedCards?.join(',')!==next.selectedCards.join(',');game=next;refreshDisplay();if(selectedChanged)loadCardGrids()}}});
 window.addEventListener('pagehide',()=>{stopRattle();clearTimeout(timeoutId);cancelAnimationFrame(animationFrame)});
 // Update check is bypass-cache; defer refreshing until any roll has been committed.
 function reloadFresh(){const url=new URL(location.href);url.searchParams.set('dango_update',String(Date.now()));location.replace(url.href)}
@@ -170,7 +326,7 @@ async function checkUpdates(){if(updateBusy||document.visibilityState==='hidden'
 document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible'){if(game?.pending && Date.now()>=game.pending.startedAt+(game.pending.durationMs||4000))finishDraw();checkUpdates()}});
 window.addEventListener('focus',checkUpdates);
 loadPreferences();game=readJSON(GAME_KEY);
-if(!validGame(game)){game=null;refreshDisplay()}else{refreshDisplay();restorePending()}
+if(!validGame(game)){game=null;refreshDisplay()}else{refreshDisplay();restorePending();loadCardGrids()}
 setInterval(checkUpdates,60000);
 </script>
 </body>
