@@ -6,7 +6,7 @@
   <meta name="theme-color" content="#f74783">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-title" content="DANGO">
-  <meta name="dango-app" content="draw-v7-reach-bingo-20261013">
+  <meta name="dango-app" content="draw-v8-settings-volume-20261013">
   <title>ガラガラ抽選 | DANGO</title>
   <link rel="icon" href="./dango_icon.png" type="image/png">
   <link rel="apple-touch-icon" href="./dango_icon.png">
@@ -87,7 +87,7 @@
 <div class="shell">
   <header class="top">
     <a href="./index.html" class="brand" aria-label="DANGO カード選択へ"><span>D</span><span>A</span><span>N</span><span>G</span><span>O</span></a>
-    <nav class="nav" aria-label="ページ移動"><a href="./index.html" id="backToCards">‹ カード選択</a><a href="./history.html" id="historyNav">出た数字を見る ↗</a><button type="button" id="soundButton" aria-pressed="true">🔊 音 ON</button></nav>
+    <nav class="nav" aria-label="ページ移動"><a href="./index.html" id="backToCards">‹ カード選択</a><a href="./history.html" id="historyNav">出た数字を見る ↗</a><a href="./setting.html?from=game" id="settingsNav">⚙ 設定</a><button type="button" id="soundButton" aria-pressed="true">🔊 音 ON</button></nav>
   </header>
   <main class="main" id="gamePanel">
     <div class="eyebrow">STEP 02 / BINGO TIME!</div>
@@ -125,18 +125,19 @@
 const GAME_KEY='dango.gameSession.v1';
 const SPEED_KEY='dango.drawSpeedSeconds.v1'; // Future settings screen can set this to 2, 4 or 6.
 const SOUND_KEY='dango.soundEnabled.v1';
+const VOLUME_KEY='dango.soundVolume.v1';
 const $=(id)=>document.getElementById(id);
 const groupOf=(n)=>'BINGO'[Math.floor((n-1)/15)];
 const labelOf=(n)=>groupOf(n)+'-'+n;
 const safeNum=(n)=>Number.isInteger(n)&&n>=1&&n<=75;
 let game=null,rolling=false,audioCtx=null,rattleTimer=null,timeoutId=null,animationFrame=0,toastTimeout=null;
-let soundEnabled=true, speedSeconds=4, updateBusy=false, updateAvailable=false;
+let soundEnabled=true, speedSeconds=4, volumePercent=70, updateBusy=false, updateAvailable=false;
 function readJSON(key){try{return JSON.parse(localStorage.getItem(key)||'null')}catch{return null}}
 function save(){try{localStorage.setItem(GAME_KEY,JSON.stringify(game));return true}catch{toast('端末に抽選データを保存できません。空き容量・保存設定をご確認ください。');return false}}
 function validGame(x){return x&&x.version===1&&Array.isArray(x.selectedCards)&&x.selectedCards.length>0&&x.selectedCards.every(n=>Number.isInteger(n)&&n>=1&&n<=250)&&new Set(x.selectedCards).size===x.selectedCards.length&&Array.isArray(x.drawn)&&x.drawn.every(safeNum)&&new Set(x.drawn).size===x.drawn.length&&(!x.pending||(safeNum(x.pending.number)&&!x.drawn.includes(x.pending.number)&&Number.isFinite(x.pending.startedAt))) }
 function toast(msg){$('toast').textContent=msg;$('toast').hidden=false;clearTimeout(toastTimeout);toastTimeout=setTimeout(()=>$('toast').hidden=true,3000)}
 function notice(msg,isError=false){$('notice').hidden=!msg;$('notice').textContent=msg;$('notice').classList.toggle('error',isError)}
-function loadPreferences(){try{soundEnabled=localStorage.getItem(SOUND_KEY)!=='false';const speed=Number(localStorage.getItem(SPEED_KEY));speedSeconds=[2,4,6].includes(speed)?speed:4}catch{}$('soundButton').textContent=soundEnabled?'🔊 音 ON':'🔇 音 OFF';$('soundButton').setAttribute('aria-pressed',String(soundEnabled));$('speedLabel').textContent=`⏱ ${speedSeconds}秒で抽選`}
+function loadPreferences(){try{soundEnabled=localStorage.getItem(SOUND_KEY)!=='false';const speed=Number(localStorage.getItem(SPEED_KEY));speedSeconds=[2,4,6].includes(speed)?speed:4;const vol=localStorage.getItem(VOLUME_KEY);volumePercent=vol===null?70:Math.min(100,Math.max(0,Number.isFinite(Number(vol))?Number(vol):70))}catch{}$('soundButton').textContent=soundEnabled?'🔊 音 ON':'🔇 音 OFF';$('soundButton').setAttribute('aria-pressed',String(soundEnabled));$('speedLabel').textContent=`⏱ ${speedSeconds}秒で抽選`}
 const CARD_URL='./cards.json';
 let cardGrids=new Map(), cardsReady=false, judgeState={reach:[],bingo:[],justBingo:[]};
 let modalFocusReturn=null;
@@ -259,19 +260,19 @@ function refreshDisplay(){if(!game){$('rollButton').disabled=true;setRollText('�
 }
 function randomIndex(length){if(length<=1)return 0;const max=0x100000000;const limit=Math.floor(max/length)*length;const nums=new Uint32Array(1);let n;do{crypto.getRandomValues(nums);n=nums[0]}while(n>=limit);return n%length}
 function remainingNumbers(){const taken=new Set(game.drawn);if(game.pending)taken.add(game.pending.number);return Array.from({length:75},(_,i)=>i+1).filter(n=>!taken.has(n))}
-function soundContext(){if(!soundEnabled)return null;try{const C=window.AudioContext||window.webkitAudioContext;if(!C)return null;if(!audioCtx)audioCtx=new C();if(audioCtx.state!=='running')audioCtx.resume().catch(()=>{});return audioCtx}catch{return null}}
+function soundContext(){if(!soundEnabled||volumePercent<=0)return null;try{const C=window.AudioContext||window.webkitAudioContext;if(!C)return null;if(!audioCtx)audioCtx=new C();if(audioCtx.state!=='running')audioCtx.resume().catch(()=>{});return audioCtx}catch{return null}}
 function shortRattle(ctx){if(!ctx||ctx.state!=='running')return;
   const when=ctx.currentTime;const len=.06;const buffer=ctx.createBuffer(1,Math.ceil(ctx.sampleRate*len),ctx.sampleRate);const data=buffer.getChannelData(0);
   for(let i=0;i<data.length;i++){const fade=(1-i/data.length);data[i]=(Math.random()*2-1)*fade*fade}
   const src=ctx.createBufferSource();src.buffer=buffer;
   const filter=ctx.createBiquadFilter();filter.type='bandpass';filter.frequency.value=850+Math.random()*900;filter.Q.value=.7;
-  const gain=ctx.createGain();gain.gain.setValueAtTime(0,when);gain.gain.linearRampToValueAtTime(.18,when+.006);gain.gain.exponentialRampToValueAtTime(.001,when+len);
+  const gain=ctx.createGain();gain.gain.setValueAtTime(0,when);gain.gain.linearRampToValueAtTime(.18*volumePercent/100,when+.006);gain.gain.exponentialRampToValueAtTime(.001,when+len);
   src.connect(filter);filter.connect(gain);gain.connect(ctx.destination);src.start(when);src.stop(when+len+.008);
 }
 function startRattle(){const ctx=soundContext();if(!ctx)return;shortRattle(ctx);rattleTimer=setInterval(()=>shortRattle(ctx),105)}
 function stopRattle(){if(rattleTimer!==null){clearInterval(rattleTimer);rattleTimer=null}}
 function finishSound(){const ctx=soundContext();if(!ctx||ctx.state!=='running')return;const t=ctx.currentTime;
-  [659.25,830.61,987.77].forEach((freq,i)=>{const osc=ctx.createOscillator();const g=ctx.createGain();osc.type='sine';osc.frequency.value=freq;g.gain.setValueAtTime(.001,t+i*.095);g.gain.exponentialRampToValueAtTime(.13,t+i*.095+.015);g.gain.exponentialRampToValueAtTime(.001,t+i*.095+.27);osc.connect(g);g.connect(ctx.destination);osc.start(t+i*.095);osc.stop(t+i*.095+.3)})
+  [659.25,830.61,987.77].forEach((freq,i)=>{const osc=ctx.createOscillator();const g=ctx.createGain();osc.type='sine';osc.frequency.value=freq;g.gain.setValueAtTime(.001,t+i*.095);g.gain.exponentialRampToValueAtTime(Math.max(.0011,.13*volumePercent/100),t+i*.095+.015);g.gain.exponentialRampToValueAtTime(.001,t+i*.095+.27);osc.connect(g);g.connect(ctx.destination);osc.start(t+i*.095);osc.stop(t+i*.095+.3)})
 }
 function cleanTimers(){stopRattle();clearTimeout(timeoutId);cancelAnimationFrame(animationFrame);rolling=false}
 function finishDraw(){if(!game||!game.pending)return;const number=game.pending.number;if(!safeNum(number)||game.drawn.includes(number)){cleanTimers();notice('保存済みの抽選データに異常があります。新しい抽選は停止しました。',true);return}
@@ -309,8 +310,8 @@ function resetGame(){if(!game||rolling)return;if(!confirm('抽選したすべて
 $('rollButton').addEventListener('click',startDraw);
 $('restartButton').addEventListener('click',resetGame);
 $('soundButton').addEventListener('click',()=>{soundEnabled=!soundEnabled;try{localStorage.setItem(SOUND_KEY,String(soundEnabled))}catch{}loadPreferences();if(soundEnabled){soundContext();toast('音をONにしました')}else{stopRattle();toast('音をOFFにしました')}});
-for(const id of ['historyNav','historyLink','backToCards'])$(id).addEventListener('click',(e)=>{if(rolling){e.preventDefault();toast('抽選中です。数字が確定してから移動してください。')}});
-window.addEventListener('storage',(event)=>{if(event.key===GAME_KEY&&!rolling){const next=readJSON(GAME_KEY);if(validGame(next)){const selectedChanged=game?.selectedCards?.join(',')!==next.selectedCards.join(',');game=next;refreshDisplay();if(selectedChanged)loadCardGrids()}}});
+for(const id of ['historyNav','historyLink','backToCards','settingsNav'])$(id).addEventListener('click',(e)=>{if(rolling){e.preventDefault();toast('抽選中です。数字が確定してから移動してください。')}});
+window.addEventListener('storage',(event)=>{if([SPEED_KEY,SOUND_KEY,VOLUME_KEY].includes(event.key)){const wasSound=soundEnabled;loadPreferences();if(wasSound&&!soundEnabled)stopRattle()}if(event.key===GAME_KEY&&!rolling){const next=readJSON(GAME_KEY);if(validGame(next)){const selectedChanged=game?.selectedCards?.join(',')!==next.selectedCards.join(',');game=next;refreshDisplay();if(selectedChanged)loadCardGrids()}}});
 window.addEventListener('pagehide',()=>{stopRattle();clearTimeout(timeoutId);cancelAnimationFrame(animationFrame)});
 // Update check is bypass-cache; defer refreshing until any roll has been committed.
 function reloadFresh(){const url=new URL(location.href);url.searchParams.set('dango_update',String(Date.now()));location.replace(url.href)}
@@ -323,7 +324,7 @@ async function checkUpdates(){if(updateBusy||document.visibilityState==='hidden'
     const currentStyle=document.querySelector('style')?.textContent;
     if(remoteCode&&((remoteCode!==currentCode)||(remoteStyle!==currentStyle))){updateAvailable=true;if(!rolling)reloadFresh()}
   }catch{}finally{updateBusy=false}}
-document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible'){if(game?.pending && Date.now()>=game.pending.startedAt+(game.pending.durationMs||4000))finishDraw();checkUpdates()}});
+document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible'){loadPreferences();if(game?.pending && Date.now()>=game.pending.startedAt+(game.pending.durationMs||4000))finishDraw();checkUpdates()}});
 window.addEventListener('focus',checkUpdates);
 loadPreferences();game=readJSON(GAME_KEY);
 if(!validGame(game)){game=null;refreshDisplay()}else{refreshDisplay();restorePending();loadCardGrids()}

@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#f74783">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="DANGO">
+  <meta name="dango-app" content="settings-v1-20261013">
+  <title>ゲーム設定 | DANGO</title>
+  <link rel="icon" href="./dango_icon.png" type="image/png">
+  <link rel="apple-touch-icon" href="./dango_icon.png">
+  <link rel="manifest" href="./manifest.webmanifest">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@500;700;900&display=swap" rel="stylesheet">
+  <style>
+    :root{--pink:#f74783;--deep:#cf2968;--ink:#573b49;--muted:#927282;--line:#f0dce6;--white:#fff;--shadow:0 15px 42px #a84f7220}
+    *{box-sizing:border-box} [hidden]{display:none!important}
+    html{color-scheme:light}body{margin:0;min-height:100vh;min-height:100dvh;background:radial-gradient(circle at 10% 8%,#ffedba 0,transparent 30%),radial-gradient(circle at 92% 2%,#ffd9e8 0,transparent 30%),linear-gradient(160deg,#fff2f6,#fffdf8 65%);color:var(--ink);font-family:'Zen Maru Gothic','Hiragino Maru Gothic ProN','Yu Gothic',sans-serif;font-weight:700}
+    button,a,input{font:inherit;-webkit-tap-highlight-color:transparent}button{cursor:pointer;touch-action:manipulation}a{text-decoration:none;color:inherit}button:focus-visible,a:focus-visible,input:focus-visible{outline:3px solid #8550cf;outline-offset:3px}
+    .shell{width:min(100%,790px);margin:0 auto;padding:20px 18px max(35px,env(safe-area-inset-bottom))}
+    .top{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:19px}
+    .brand{font-size:clamp(27px,5.5vw,36px);font-weight:900;display:flex;gap:.035em;letter-spacing:-.04em;filter:drop-shadow(1px 3px 0 #fff)}
+    .brand span:nth-child(1){color:#ef5893;transform:rotate(-7deg)}.brand span:nth-child(2){color:#e7a428;transform:rotate(5deg)}.brand span:nth-child(3){color:#61b884;transform:rotate(-5deg)}.brand span:nth-child(4){color:#9977cc;transform:rotate(6deg)}.brand span:nth-child(5){color:#ef9252;transform:rotate(-4deg)}
+    .nav{display:flex;gap:7px;flex-wrap:wrap;justify-content:flex-end}.nav a{border-radius:100px;border:1px solid #f4dae4;background:#fff;padding:9px 13px;font-size:12px;color:#aa5479;box-shadow:0 3px 8px #cf8da624}
+    .panel{background:#fffefa;border:2px solid #fff;border-radius:29px;padding:clamp(18px,5vw,30px);box-shadow:var(--shadow)}
+    .eyebrow{font-size:12px;letter-spacing:.09em;color:var(--deep);font-weight:900}
+    h1{font-size:clamp(28px,5.5vw,35px);margin:6px 0 8px;line-height:1.2}.intro{margin:0 0 22px;font-size:13px;line-height:1.75;color:var(--muted)}
+    .section{background:white;border:1px solid var(--line);border-radius:22px;padding:19px 20px;margin-top:15px}
+    .section-title{display:flex;align-items:center;gap:8px;margin:0 0 6px;font-size:18px;font-weight:900}.section-desc{font-size:12px;line-height:1.7;color:var(--muted);margin:0 0 17px}
+    .speed-options{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:9px}.speed-options label{position:relative;cursor:pointer;min-width:0}.speed-options input{position:absolute;opacity:0;pointer-events:none}.speed-card{border:2px solid #f2dce5;background:#fff5f8;display:flex;align-items:center;justify-content:center;gap:4px;flex-direction:column;min-height:94px;padding:12px 4px;border-radius:19px;color:#a86c84;box-shadow:0 3px 0 #f2dce5;transition:transform .15s,background .15s}.speed-card b{font-size:18px;color:inherit}.speed-card small{font-size:12px}.speed-options input:checked+.speed-card{background:linear-gradient(160deg,#ff80af,#f33f84);color:#fff;border-color:#df3378;box-shadow:0 5px 0 #c02e67;transform:translateY(-2px)}.speed-options input:focus-visible+.speed-card{outline:3px solid #8550cf;outline-offset:3px}
+    .toggle-row{display:flex;align-items:center;justify-content:space-between;gap:15px}.toggle-row .section-desc{margin:0}.switch{display:inline-flex;position:relative;width:64px;height:37px;flex:none;cursor:pointer}.switch input{position:absolute;opacity:0;width:100%;height:100%;margin:0;cursor:pointer}.switch-track{position:absolute;inset:0;border-radius:100px;background:#d9d3d7;box-shadow:inset 0 2px 5px #8f768842;transition:background .2s}.switch-track:before{content:'';position:absolute;width:27px;height:27px;left:5px;top:5px;background:#fff;border-radius:50%;box-shadow:0 2px 5px #4f36442b;transition:transform .2s}.switch input:checked+.switch-track{background:#f74783}.switch input:checked+.switch-track:before{transform:translateX(27px)}.switch input:focus-visible+.switch-track{outline:3px solid #8550cf;outline-offset:3px}
+    .volume-top{display:flex;align-items:center;justify-content:space-between;gap:10px}.volume-top label{font-size:16px;font-weight:900}.volume-value{background:#fff0f5;color:#bc3c70;padding:5px 11px;border-radius:100px;min-width:65px;text-align:center;font-size:15px;font-variant-numeric:tabular-nums}
+    input[type=range]{width:100%;margin:18px 0 6px;accent-color:var(--pink);height:28px;cursor:pointer}input[type=range]:disabled{opacity:.4;cursor:not-allowed}
+    .endpoints{display:flex;justify-content:space-between;color:#9d8793;font-size:11px}
+    .preview{width:100%;display:flex;align-items:center;justify-content:center;gap:8px;padding:15px;border:0;border-radius:16px;background:#fff0d4;color:#86551c;font-size:16px;font-weight:900;box-shadow:0 4px 0 #ebca8d;margin-top:15px}.preview:disabled{opacity:.5;cursor:not-allowed;box-shadow:none}.preview:not(:disabled):active{transform:translateY(3px);box-shadow:0 1px 0 #ebca8d}
+    .save-status{min-height:19px;font-size:12px;color:#519365;margin:15px 2px 0;text-align:center}.save-status.error{color:#c13c69}
+    .back{margin:18px 0 0;display:block;text-align:center;border-radius:19px;border:0;background:linear-gradient(#f97cab,#f13e82);box-shadow:0 6px 0 #c1326d;padding:16px;color:#fff;font-size:18px;font-weight:900}.back:active{transform:translateY(4px);box-shadow:0 2px 0 #c1326d}
+    .footnote{font-size:12px;line-height:1.7;color:var(--muted);text-align:center;margin-top:17px}
+    @media(max-width:480px){.shell{padding:13px 11px 28px}.top{margin-bottom:12px}.nav a{padding:8px 9px;font-size:11px}.panel{border-radius:23px;padding:17px 13px}.section{padding:16px 13px}.speed-options{gap:7px}.speed-card{min-height:90px;border-radius:15px}.speed-card b{font-size:16px}}
+    @media(prefers-reduced-motion:reduce){*,*:before,*:after{transition:none!important}}
+  </style>
+</head>
+<body>
+  <div class="shell">
+    <header class="top">
+      <a href="./index.html" class="brand" aria-label="カード選択へ"><span>D</span><span>A</span><span>N</span><span>G</span><span>O</span></a>
+      <nav class="nav"><a href="./index.html">‹ カード選択</a><a href="./game.html" id="toGame" hidden>🎱 抽選画面へ</a></nav>
+    </header>
+    <main class="panel">
+      <div class="eyebrow">DANGO / SETTINGS</div>
+      <h1>⚙ ゲーム設定</h1>
+      <p class="intro">ガラガラのスピードと音を、好きな感じに調整しよう！<br>変更は自動で保存されます。</p>
+      <section class="section" aria-labelledby="speedHeading">
+        <h2 class="section-title" id="speedHeading">⏱ 抽選スピード</h2>
+        <p class="section-desc">「ガラガラ回す！」から数字が確定するまでの時間です。</p>
+        <div class="speed-options" role="radiogroup" aria-label="抽選スピード">
+          <label><input type="radio" name="speed" value="2"><span class="speed-card"><b>⚡ 速い</b><small>2 秒</small></span></label>
+          <label><input type="radio" name="speed" value="4"><span class="speed-card"><b>🎱 普通</b><small>4 秒</small></span></label>
+          <label><input type="radio" name="speed" value="6"><span class="speed-card"><b>🐢 遅い</b><small>6 秒</small></span></label>
+        </div>
+      </section>
+      <section class="section" aria-labelledby="soundHeading">
+        <div class="toggle-row">
+          <div><h2 class="section-title" id="soundHeading">🔊 効果音</h2><p class="section-desc">ガラガラ音・数字確定音を鳴らす</p></div>
+          <label class="switch" title="効果音ON/OFF"><input type="checkbox" id="soundToggle" aria-label="効果音ON/OFF" role="switch"><span class="switch-track"></span></label>
+        </div>
+      </section>
+      <section class="section" aria-labelledby="volumeHeading">
+        <div class="volume-top"><label for="volume" id="volumeHeading">🎚 効果音の音量</label><output id="volumeValue" class="volume-value" for="volume">70%</output></div>
+        <input type="range" id="volume" min="0" max="100" step="5" value="70" aria-label="効果音の音量">
+        <div class="endpoints"><span>0%（無音）</span><span>100%（最大）</span></div>
+        <button type="button" id="preview" class="preview">▶ 効果音をテスト</button>
+        <p class="section-desc" id="previewGuide" style="margin:13px 0 0">ガラガラ音の後に、数字の確定音を鳴らします。</p>
+      </section>
+      <p class="save-status" id="saveStatus" role="status" aria-live="polite"></p>
+      <a class="back" href="./index.html" id="backLink">✓ 設定完了！ カード選択へ</a>
+      <p class="footnote">設定はこの端末のブラウザ内に保存されます。<br>抽選履歴や選択したカードは変更しません。</p>
+    </main>
+  </div>
+  <script>
+    'use strict';
+    const SPEED_KEY='dango.drawSpeedSeconds.v1';
+    const SOUND_KEY='dango.soundEnabled.v1';
+    const VOLUME_KEY='dango.soundVolume.v1';
+    const GAME_KEY='dango.gameSession.v1';
+    const $=id=>document.getElementById(id);
+    let audioCtx=null, previewTimer=null, previewEndTimer=null;
+    function readSettings(){
+      let speed=4, sound=true, volume=70;
+      try{
+        const stored=Number(localStorage.getItem(SPEED_KEY));
+        if([2,4,6].includes(stored))speed=stored;
+        sound=localStorage.getItem(SOUND_KEY)!=='false';
+        const v=localStorage.getItem(VOLUME_KEY);
+        if(v!==null && Number.isFinite(Number(v)))volume=Math.min(100,Math.max(0,Number(v)));
+      }catch{}
+      return {speed,sound,volume};
+    }
+    function saveSetting(key,value){
+      try{localStorage.setItem(key,String(value));$('saveStatus').textContent='✓ 設定を保存しました';$('saveStatus').classList.remove('error');return true}
+      catch{$('saveStatus').textContent='端末に設定を保存できません。プライベートブラウズなどの保存設定をご確認ください。';$('saveStatus').classList.add('error');return false}
+    }
+    function hasGame(){
+      try{const g=JSON.parse(localStorage.getItem(GAME_KEY)||'null');return g&&Array.isArray(g.selectedCards)&&g.selectedCards.length>0}
+      catch{return false}
+    }
+    function updateAvailability(){
+      const enabled=$('soundToggle').checked;
+      $('volume').disabled=!enabled;
+      $('volumeValue').textContent=$('volume').value+'%';
+      $('preview').disabled=!enabled||Number($('volume').value)===0||previewTimer!==null;
+      $('previewGuide').textContent=!enabled?'効果音をONにすると試聴できます。':Number($('volume').value)===0?'音量が0%なので無音です。':'ガラガラ音の後に、数字の確定音を鳴らします。';
+    }
+    function stopPreview(){
+      if(previewTimer!==null){clearInterval(previewTimer);previewTimer=null}
+      if(previewEndTimer!==null){clearTimeout(previewEndTimer);previewEndTimer=null}
+      $('preview').textContent='▶ 効果音をテスト';updateAvailability();
+    }
+    async function contextForAudio(){
+      const C=window.AudioContext||window.webkitAudioContext;
+      if(!C)throw new Error('このブラウザでは音声再生に対応していません');
+      if(!audioCtx)audioCtx=new C();
+      if(audioCtx.state!=='running')await audioCtx.resume();
+      if(audioCtx.state!=='running')throw new Error('音声の再生を開始できませんでした');
+      return audioCtx;
+    }
+    function playRattle(ctx,amount){
+      if(amount<=0||ctx.state!=='running')return;
+      const t=ctx.currentTime, len=.06;
+      const buffer=ctx.createBuffer(1,Math.ceil(ctx.sampleRate*len),ctx.sampleRate);
+      const data=buffer.getChannelData(0);
+      for(let i=0;i<data.length;i++){const fade=1-i/data.length;data[i]=(Math.random()*2-1)*fade*fade}
+      const src=ctx.createBufferSource();src.buffer=buffer;
+      const filter=ctx.createBiquadFilter();filter.type='bandpass';filter.frequency.value=850+Math.random()*900;filter.Q.value=.7;
+      const gain=ctx.createGain();gain.gain.setValueAtTime(0,t);
+      gain.gain.linearRampToValueAtTime(.18*amount,t+.006);
+      gain.gain.exponentialRampToValueAtTime(.001,t+len);
+      src.connect(filter);filter.connect(gain);gain.connect(ctx.destination);src.start(t);src.stop(t+len+.008);
+    }
+    function playFinish(ctx,amount){
+      if(amount<=0||ctx.state!=='running')return;
+      const t=ctx.currentTime;
+      [659.25,830.61,987.77].forEach((frequency,i)=>{
+        const osc=ctx.createOscillator(),gain=ctx.createGain();osc.type='sine';osc.frequency.value=frequency;
+        gain.gain.setValueAtTime(.001,t+i*.095);
+        gain.gain.exponentialRampToValueAtTime(Math.max(.0011,.13*amount),t+i*.095+.015);
+        gain.gain.exponentialRampToValueAtTime(.001,t+i*.095+.27);
+        osc.connect(gain);gain.connect(ctx.destination);osc.start(t+i*.095);osc.stop(t+i*.095+.3);
+      });
+    }
+    function init(){
+      const s=readSettings();
+      document.querySelector(`input[name="speed"][value="${s.speed}"]`).checked=true;
+      $('soundToggle').checked=s.sound;$('volume').value=s.volume;
+      if(hasGame()){$('toGame').hidden=false;const origin=new URLSearchParams(location.search).get('from');if(origin==='game'){$('backLink').href='./game.html';$('backLink').textContent='✓ 設定完了！ 抽選画面へ'}}
+      updateAvailability();
+    }
+    document.querySelectorAll('input[name="speed"]').forEach(input=>input.addEventListener('change',()=>{if(input.checked)saveSetting(SPEED_KEY,input.value)}));
+    $('soundToggle').addEventListener('change',()=>{saveSetting(SOUND_KEY,$('soundToggle').checked);if(!$('soundToggle').checked)stopPreview();updateAvailability()});
+    $('volume').addEventListener('input',()=>{$('volumeValue').textContent=$('volume').value+'%';updateAvailability();saveSetting(VOLUME_KEY,$('volume').value)});
+    $('preview').addEventListener('click',async()=>{
+      if(previewTimer!==null || !$('soundToggle').checked || Number($('volume').value)<=0)return;
+      // Start audio from a direct tap so iPhone/Safari can unlock AudioContext.
+      $('preview').disabled=true;$('preview').textContent='♪ 再生中…';
+      try{
+        const ctx=await contextForAudio();
+        const vol=Number($('volume').value)/100;
+        playRattle(ctx,vol);
+        let count=1;
+        previewTimer=setInterval(()=>{
+          if(count>=12){clearInterval(previewTimer);previewTimer=null;if($('soundToggle').checked)playFinish(ctx,Number($('volume').value)/100);previewEndTimer=setTimeout(stopPreview,600);return}
+          if($('soundToggle').checked)playRattle(ctx,Number($('volume').value)/100);
+          count++;
+        },105);
+      }catch(err){stopPreview();$('saveStatus').textContent=err?.message||'効果音を再生できませんでした';$('saveStatus').classList.add('error')}
+    });
+    window.addEventListener('pagehide',stopPreview);
+    let checkBusy=false;
+    async function checkUpdate(){
+      if(checkBusy||document.visibilityState==='hidden'||navigator.onLine===false)return;
+      checkBusy=true;
+      try{
+        const url=new URL('setting.html',document.baseURI);url.searchParams.set('_fresh',String(Date.now()));
+        const response=await fetch(url,{cache:'no-store'});if(!response.ok)return;
+        const remote=new DOMParser().parseFromString(await response.text(),'text/html');
+        if(remote.querySelector('meta[name="dango-app"]')?.content!==document.querySelector('meta[name="dango-app"]')?.content){
+          if(previewTimer!==null)return;
+          const target=new URL(location.href);target.searchParams.set('dango_update',String(Date.now()));location.replace(target.href);
+        }
+      }catch{}finally{checkBusy=false}
+    }
+    document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible')checkUpdate()});
+    window.addEventListener('focus',checkUpdate);
+    init();setInterval(checkUpdate,60000);
+  </script>
+</body>
+</html>

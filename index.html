@@ -8,7 +8,7 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="default" />
   <meta name="apple-mobile-web-app-title" content="DANGO" />
   <meta name="description" content="DANGO — ビンゴ大会のカード選択をもっとかんたんに。" />
-  <meta name="dango-app" content="dango-card-picker-v4-draw" />
+  <meta name="dango-app" content="dango-card-picker-v8-settings" />
   <title>DANGO | ビンゴをもっとたのしく。</title>
   <link rel="icon" type="image/png" href="./dango_icon.png" />
   <link rel="apple-touch-icon" href="./dango_icon.png" />
@@ -43,7 +43,10 @@
     .brand h1:after{content:'✦';color:#f6b83c;font-size:25px;-webkit-text-stroke:0;text-shadow:none;align-self:flex-start;transform:rotate(15deg);margin-left:2px}
 
     .brand p {margin:8px 0 0;font-size:14px;color:#896877}
-    .version-pill {margin-left:auto;align-self:start;background:var(--white);border:1px solid var(--line);border-radius:100px;padding:7px 12px;color:#a66c82;font-size:11px;white-space:nowrap}
+    .hero-tools{margin-left:auto;display:flex;align-items:center;gap:8px;flex-wrap:wrap;justify-content:flex-end}
+    .settings-link{display:inline-flex;align-items:center;justify-content:center;white-space:nowrap;border:1px solid #f3c3d4;background:#fff1f6;color:#bd3c76;border-radius:100px;padding:9px 13px;font-size:12px;font-weight:900;text-decoration:none}
+    .settings-link:focus-visible{outline:3px solid #7146cc;outline-offset:3px}
+    .version-pill {margin-left:0;align-self:start;background:var(--white);border:1px solid var(--line);border-radius:100px;padding:7px 12px;color:#a66c82;font-size:11px;white-space:nowrap}
     .panel {background:rgba(255,255,255,.96);border:2px solid #fff;border-radius:28px;box-shadow:var(--shadow);padding:24px}
     .intro {display:flex;align-items:center;justify-content:space-between;gap:12px}
     .eyebrow {font-size:12px;color:var(--pink-deep);font-weight:900;letter-spacing:.1em}
@@ -117,7 +120,10 @@
       .hero {gap:12px;padding:7px 7px 18px}
       .brand h1 {font-size:clamp(37px,10vw,49px)}
       .brand p {font-size:11px;margin-top:5px}
-      .version-pill {font-size:9px;padding:5px 7px}
+      .hero-tools{margin-left:auto;display:flex;align-items:center;gap:8px;flex-wrap:wrap;justify-content:flex-end}
+    .settings-link{display:inline-flex;align-items:center;justify-content:center;white-space:nowrap;border:1px solid #f3c3d4;background:#fff1f6;color:#bd3c76;border-radius:100px;padding:9px 13px;font-size:12px;font-weight:900;text-decoration:none}
+    .settings-link:focus-visible{outline:3px solid #7146cc;outline-offset:3px}
+    .version-pill {font-size:9px;padding:5px 7px}
       .panel {padding:17px 13px;border-radius:22px}
       .sticker {font-size:27px}
       .stat {padding:10px 12px}
@@ -153,7 +159,7 @@
       <main class="wrap">
         <header class="hero">
           <div class="brand"><h1 aria-label="DANGO"><span aria-hidden="true">D</span><span aria-hidden="true">A</span><span aria-hidden="true">N</span><span aria-hidden="true">G</span><span aria-hidden="true">O</span></h1><p>ビンゴを、もっとたのしく。</p></div>
-          <span class="version-pill">DANGO v4</span>
+          <div class="hero-tools"><a class="settings-link" href="./setting.html?from=cards">⚙ 設定</a><span class="version-pill">DANGO v8</span></div>
         </header>
         <section class="panel" aria-labelledby="pageTitle">
           <div class="intro">
