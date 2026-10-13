@@ -6,7 +6,7 @@
   <meta name="theme-color" content="#f74783">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-title" content="DANGO">
-  <meta name="dango-app" content="draw-v4-20261013">
+  <meta name="dango-app" content="draw-v5-bigball-20261013">
   <title>ガラガラ抽選 | DANGO</title>
   <link rel="icon" href="./dango_icon.png" type="image/png">
   <link rel="apple-touch-icon" href="./dango_icon.png">
@@ -26,18 +26,20 @@
     .main{margin-top:15px;min-height:550px;background:#fffeffdf;border:2px solid white;border-radius:30px;box-shadow:var(--shadow);text-align:center;padding:21px clamp(14px,4vw,32px) 24px;display:flex;flex-direction:column;align-items:center}
     .eyebrow{font-size:12px;letter-spacing:.13em;color:var(--deep);font-weight:900}.title{font-size:clamp(23px,4vw,31px);margin:6px 0 4px}.hint{color:var(--sub);font-size:13px;line-height:1.6;margin:0}
     .tags{display:flex;justify-content:center;gap:9px;margin:13px 0 8px;flex-wrap:wrap}.tag{font-size:12px;padding:7px 11px;border-radius:100px;background:#fff2d8;color:#8f6540}.tag:nth-child(2){background:#f5eaff;color:#8d6599}
-    .stage{display:flex;align-items:center;justify-content:center;flex:1;width:100%;min-height:274px;padding:10px 0 5px}
-    .ball{width:clamp(220px,35vw,362px);height:clamp(220px,35vw,362px);min-width:220px;min-height:220px;border-radius:50%;border:7px solid #fff;display:flex;flex-direction:column;align-items:center;justify-content:center;position:relative;box-shadow:0 9px 0 #e7b4c9,0 18px 30px #b5678530,inset -10px -14px 25px #c7518630;background:radial-gradient(circle at 28% 19%,#fff 0,#ffecf5 23%,#ffa4c7 63%,#f16b9e 100%);transform:translateZ(0);overflow:hidden}
+    .stage{display:flex;align-items:center;justify-content:center;flex:1;width:100%;min-height:0;padding:14px 0 12px}
+    /* v5: precisely double the former desktop ball's diameter (35vw -> 70vw, 362 -> 724px).
+       On narrow screens, keep the whole circle visible instead of cropping it. */
+    .ball{width:clamp(440px,70vw,724px);height:auto;aspect-ratio:1;flex:0 0 auto;border-radius:50%;border:9px solid #fff;display:flex;flex-direction:column;align-items:center;justify-content:center;position:relative;box-shadow:0 9px 0 #e7b4c9,0 18px 30px #b5678530,inset -10px -14px 25px #c7518630;background:radial-gradient(circle at 28% 19%,#fff 0,#ffecf5 23%,#ffa4c7 63%,#f16b9e 100%);transform:translateZ(0);overflow:hidden}
     .ball:before{content:'';position:absolute;left:17%;top:12%;width:22%;height:12%;border-radius:50%;transform:rotate(-35deg);background:#ffffff9b;filter:blur(4px)}
-    .ball .letter{font-size:clamp(30px,7vw,49px);line-height:1;margin-bottom:4px;color:#8d2756;font-weight:900;text-shadow:0 2px #fff8}.ball .number{font-size:clamp(112px,18vw,190px);letter-spacing:-.085em;line-height:.95;font-weight:900;color:#fff;text-shadow:3px 6px 0 #b23f78,0 4px 19px #ce437170;padding-right:.08em;font-variant-numeric:tabular-nums}
-    .ball.wait .number{font-size:clamp(99px,24vw,168px)}.ball.wait .letter{font-size:22px}.ball.spin{animation:rumble .12s linear infinite alternate}.ball.pop{animation:pop .5s cubic-bezier(.2,1.9,.35,1)}
+    .ball .letter{font-size:clamp(60px,14vw,98px);line-height:1;margin-bottom:8px;color:#8d2756;font-weight:900;text-shadow:0 2px #fff8}.ball .number{font-size:clamp(224px,36vw,380px);letter-spacing:-.085em;line-height:.95;font-weight:900;color:#fff;text-shadow:3px 6px 0 #b23f78,0 4px 19px #ce437170;padding-right:.08em;font-variant-numeric:tabular-nums}
+    .ball.wait .number{font-size:clamp(198px,32vw,336px)}.ball.wait .letter{font-size:44px}.ball.spin{animation:rumble .12s linear infinite alternate}.ball.pop{animation:pop .5s cubic-bezier(.2,1.9,.35,1)}
     .ball.type-I{background:radial-gradient(circle at 28% 19%,white 0,#ffefbc 23%,#f8c85d 65%,#efa838 100%)}.ball.type-N{background:radial-gradient(circle at 28% 19%,white 0,#e6f9da 23%,#83d4a3 65%,#52b987 100%)}.ball.type-G{background:radial-gradient(circle at 28% 19%,white 0,#f4ebff 23%,#b6a1ee 65%,#997cdd 100%)}.ball.type-O{background:radial-gradient(circle at 28% 19%,white 0,#ffeedb 23%,#fab078 65%,#ed8b5b 100%)}
     .stage-line{font-size:15px;color:#a64a75;min-height:25px;margin:0 0 13px}.stage-line strong{color:var(--deep)}
     .roll{width:min(100%,460px);padding:16px 24px;border:0;border-radius:21px;background:linear-gradient(180deg,#fa649f,#ec347b);color:#fff;font-size:clamp(20px,5vw,26px);font-weight:900;box-shadow:0 7px 0 #bb2e67,0 15px 24px #ec50914b;transition:transform .13s,box-shadow .13s}.roll:not(:disabled):active{transform:translateY(5px);box-shadow:0 2px 0 #bb2e67}.roll:disabled{opacity:.6;cursor:not-allowed;box-shadow:none}
     .info{margin-top:17px;display:flex;gap:12px;width:min(100%,460px)}.info>div{flex:1;border-radius:16px;padding:11px;background:#fff0f6}.info>div:nth-child(2){background:#fff2d8}.info small{display:block;color:#8c6176;font-size:11px}.info strong{font-size:25px;font-variant-numeric:tabular-nums}.subnav{margin-top:14px;display:flex;flex-wrap:wrap;justify-content:center;gap:12px}.subnav a,.subnav button{border:0;background:transparent;color:#aa5576;text-decoration:underline;font-size:13px;padding:8px;font-weight:900}.subnav button:disabled{opacity:.3}
     .notice{margin:18px auto 0;max-width:670px;border-radius:17px;background:#fff5d8;color:#8a703c;padding:14px 18px;font-size:13px;line-height:1.7}.error{background:#ffdee5;color:#a53464}.toast{position:fixed;bottom:18px;left:18px;right:18px;margin:auto;width:max-content;max-width:calc(100% - 36px);border-radius:16px;background:#573b49;color:#fff;padding:12px 20px;box-shadow:0 8px 30px #412c3677;font-size:13px;text-align:center;z-index:9}
     @keyframes rumble{0%{transform:translate(-3px,1px) rotate(-2deg)}100%{transform:translate(3px,-2px) rotate(2deg)}}@keyframes pop{0%{transform:scale(.75)}65%{transform:scale(1.075)}100%{transform:scale(1)}}
-    @media(max-width:520px){.shell{padding:12px 10px 25px}.top{gap:8px}.brand{font-size:22px}.nav a,.nav button{padding:8px 10px;font-size:11px}.main{padding:20px 12px 23px;border-radius:25px;min-height:calc(100dvh - 98px)}.stage{min-height:240px}.ball{width:min(64vw,290px);height:min(64vw,290px);min-width:220px;min-height:220px}.ball .number{font-size:125px}.info strong{font-size:22px}}
+    @media(max-width:520px){.shell{padding:12px 10px 25px}.top{gap:8px}.brand{font-size:22px}.nav a,.nav button{padding:8px 10px;font-size:11px}.main{padding:20px 12px 23px;border-radius:25px;min-height:calc(100dvh - 98px)}.stage{min-height:0}.ball{width:calc(100vw - 48px);max-width:472px;border-width:7px}.ball .letter{font-size:clamp(32px,10vw,52px);margin-bottom:4px}.ball .number{font-size:clamp(112px,37vw,190px)}.ball.wait .number{font-size:clamp(84px,26vw,140px)}.ball.wait .letter{font-size:24px}.info strong{font-size:22px}}
     @media(prefers-reduced-motion:reduce){.ball.spin,.ball.pop{animation:none}.roll{transition:none}}
   </style>
 </head>
