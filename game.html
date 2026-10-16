@@ -6,7 +6,7 @@
   <meta name="theme-color" content="#f74783">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-title" content="DANGO">
-  <meta name="dango-app" content="draw-v8-settings-volume-20261013">
+  <meta name="dango-app" content="draw-v11-firebase-20261016"><meta name="dango-app-version" content="11">
   <title>ガラガラ抽選 | DANGO</title>
   <link rel="icon" href="./dango_icon.png" type="image/png">
   <link rel="apple-touch-icon" href="./dango_icon.png">
@@ -82,13 +82,26 @@
     @media(max-width:520px){.action-row{gap:6px;grid-template-columns:minmax(0,1.7fr) minmax(0,1fr) minmax(0,1fr)}.action-row .roll{font-size:17px;padding:11px 4px;border-radius:16px}.roll-long{display:none}.roll-short{display:inline}.judge{border-radius:16px;padding:7px 2px}.judge .judge-name{font-size:13px}.judge .judge-count{font-size:18px}.result-list{grid-template-columns:repeat(auto-fit,minmax(94px,1fr));gap:8px}.number-chip{padding:12px 4px;font-size:21px}.result-modal{border-radius:22px;padding:18px 12px}.info{gap:6px}}
     @media(max-height:470px) and (orientation:landscape){.result-modal{max-height:94dvh;padding:9px 16px}.modal-eyebrow{font-size:10px}.modal-title{font-size:27px}.modal-caption{margin:0 8px 5px;font-size:12px}.number-chip{padding:7px 5px}.legend{margin-top:4px}.modal-close{top:5px;right:7px;width:34px;height:34px}.result-list{grid-template-columns:repeat(auto-fit,minmax(95px,1fr));gap:7px}}
     @media(prefers-reduced-motion:reduce){.ball.spin,.ball.pop{animation:none}.roll{transition:none}}
-  </style>
+  
+    /* v11: host controls for shared bingo results */
+    .share-panel{background:#fffffff5;border:2px solid #f8d2e2;border-radius:25px;max-width:720px;margin:16px auto 0;padding:17px 20px;box-shadow:0 10px 30px #be548029}
+    .share-top{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+    .share-title{font-weight:900;font-size:18px;color:#ac356b}
+    .share-desc{font-size:12px;color:#947487;line-height:1.7;margin:7px 0 12px}
+    .share-code{font-size:clamp(35px,7vw,56px);font-weight:900;color:#b33275;text-align:center;letter-spacing:.12em;font-variant-numeric:tabular-nums;margin:11px 0;background:#fff2f7;border-radius:15px;padding:9px}
+    .share-actions{display:flex;justify-content:center;gap:8px;flex-wrap:wrap}
+    .share-actions button{border-radius:13px;border:1px solid #f4b6cd;padding:11px 13px;background:#ffe5ef;color:#a42b65;font-size:12px;font-weight:900}
+    .share-actions button.primary{background:#ef4b8d;color:white;border:0}
+    .share-status{font-size:12px;min-height:20px;color:#a64a76;text-align:center;margin-top:12px;line-height:1.6}
+    .share-status.bad{color:#b43443}
+    .share-actions button:disabled{opacity:.45;cursor:not-allowed}
+    </style>
 </head>
 <body>
 <div class="shell">
   <header class="top">
     <a href="./index.html" class="brand" aria-label="DANGO カード選択へ"><span>D</span><span>A</span><span>N</span><span>G</span><span>O</span></a>
-    <nav class="nav" aria-label="ページ移動"><a href="./index.html" id="backToCards">‹ カード選択</a><a href="./history.html" id="historyNav">出た数字を見る ↗</a><a href="./setting.html?from=game" id="settingsNav">⚙ 設定</a><button type="button" id="soundButton" aria-pressed="true">🔊 音 ON</button></nav>
+    <nav class="nav" aria-label="ページ移動"><a href="./index.html" id="backToCards">‹ カード選択</a><a href="./history.html" id="historyNav">出た数字を見る ↗</a><a href="./setting.html?from=game" id="settingsNav">⚙ 設定</a><button type="button" id="shareToggle">📡 端末連携</button><button type="button" id="soundButton" aria-pressed="true">🔊 音 ON</button></nav>
   </header>
   <main class="main" id="gamePanel">
     <div class="eyebrow">STEP 02 / BINGO TIME!</div>
@@ -107,6 +120,19 @@
     <div class="info"><div><small>出た数字</small><strong id="drawCount">0 / 75</strong></div><div><small>残り</small><strong id="remainingCount">75 個</strong></div></div>
     <div class="subnav"><a href="./history.html" id="historyLink">🔢 出た数字を確認する</a><button type="button" id="restartButton">↺ 最初からやり直す</button></div>
   </main>
+  <section id="sharePanel" class="share-panel" aria-label="端末連携" hidden>
+    <div class="share-top"><strong class="share-title">📡 確認端末とつなぐ</strong><button id="shareClose" type="button" style="border:0;border-radius:12px;padding:8px 12px;background:#f5e6ed;color:#9d4771;font-size:13px;font-weight:900">閉じる ×</button></div>
+    <p class="share-desc">確認担当のスマホでは抽選操作はできません。ゲームIDで接続すると、今回のビンゴはピンク・過去のビンゴはグレーで自動表示されます。</p>
+    <div id="shareCode" class="share-code" hidden></div>
+    <div class="share-actions">
+      <button id="createShare" type="button" class="primary">ゲームIDを発行する</button>
+      <button id="copyCode" type="button" hidden>ゲームIDをコピー</button>
+      <button id="copyLink" type="button" hidden>接続リンクをコピー</button>
+      <button id="retrySync" type="button" hidden>再同期する</button>
+      <button id="stopShare" type="button" hidden>連携を終了する</button>
+    </div>
+    <div id="shareStatus" class="share-status" role="status">未接続です</div>
+  </section>
   <div id="resultOverlay" class="result-overlay" hidden>
     <section class="result-modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle" aria-describedby="modalCaption">
       <button class="modal-close" id="closeResults" type="button" aria-label="閉じる">×</button>
@@ -134,6 +160,12 @@ const labelOf=(n)=>groupOf(n)+'-'+n;
 const safeNum=(n)=>Number.isInteger(n)&&n>=1&&n<=75;
 let game=null,rolling=false,audioCtx=null,rattleTimer=null,timeoutId=null,animationFrame=0,toastTimeout=null;
 let soundEnabled=true, speedSeconds=4, volumePercent=70, updateBusy=false, updateAvailable=false;
+const CLOUD_MARKER_KEY='dango.remoteHost.v1';
+let hostCode=null,hostRef=null,cloudOnline=false,cloudReady=false,cloudBusy=false,cloudError='',cloudUser=null,cloudConnectionAttached=false,cloudInitPromise=null;
+let cloudMutation=Promise.resolve();
+function hostMarker(){try{const x=JSON.parse(localStorage.getItem(CLOUD_MARKER_KEY)||'null');return x&&/^[0-9]{8}$/.test(x.code)?x:null}catch{return null}}
+function cloudDrawBlocked(){return !!(hostCode||hostMarker())&&(!cloudOnline||!cloudReady||cloudBusy||!!cloudError)}
+
 function readJSON(key){try{return JSON.parse(localStorage.getItem(key)||'null')}catch{return null}}
 function save(){try{localStorage.setItem(GAME_KEY,JSON.stringify(game));return true}catch{toast('端末に抽選データを保存できません。空き容量・保存設定をご確認ください。');return false}}
 function validGame(x){return x&&x.version===1&&Array.isArray(x.selectedCards)&&x.selectedCards.length>0&&x.selectedCards.every(n=>Number.isInteger(n)&&n>=1&&n<=250)&&new Set(x.selectedCards).size===x.selectedCards.length&&Array.isArray(x.drawn)&&x.drawn.every(safeNum)&&new Set(x.drawn).size===x.drawn.length&&(!x.pending||(safeNum(x.pending.number)&&!x.drawn.includes(x.pending.number)&&Number.isFinite(x.pending.startedAt))) }
@@ -257,7 +289,7 @@ function displayWaiting(){$('ball').className='ball wait';$('ballLetter').textCo
 function refreshDisplay(){if(!game){$('rollButton').disabled=true;setRollText('カードを選んでね','カード未選択');$('restartButton').disabled=true;refreshJudge();notice('カードが選択されていません。「カード選択」から使う番号を選び、「ゲームを始める」を押してください。',true);return}
   updateCounter();$('restartButton').disabled=false;
   if(game.drawn.length){displayNumber(game.drawn[game.drawn.length-1])}else{displayWaiting()}
-  const done=game.drawn.length===75;$('rollButton').disabled=done||!cardsReady||rolling;setRollText(done?'🎉 75個すべて抽選完了！':cardsReady?'🎱 ガラガラ回す！':'⏳ カード読込中',done?'抽選完了！':cardsReady?'🎱 回す！':'読込中');refreshJudge();
+  const done=game.drawn.length===75;$('rollButton').disabled=done||!cardsReady||rolling||cloudDrawBlocked();setRollText(done?'🎉 75個すべて抽選完了！':cardsReady?'🎱 ガラガラ回す！':'⏳ カード読込中',done?'抽選完了！':cardsReady?'🎱 回す！':'読込中');refreshJudge();
   if(done){$('guide').textContent='すべての数字が出ました！';$('resultLine').textContent='🎉 抽選完了！ おつかれさま！'}
 }
 function randomIndex(length){if(length<=1)return 0;const max=0x100000000;const limit=Math.floor(max/length)*length;const nums=new Uint32Array(1);let n;do{crypto.getRandomValues(nums);n=nums[0]}while(n>=limit);return n%length}
@@ -280,7 +312,7 @@ function cleanTimers(){stopRattle();clearTimeout(timeoutId);cancelAnimationFrame
 function finishDraw(){if(!game||!game.pending)return;const number=game.pending.number;if(!safeNum(number)||game.drawn.includes(number)){cleanTimers();notice('保存済みの抽選データに異常があります。新しい抽選は停止しました。',true);return}
   const previous=game.pending;game.drawn.push(number);game.pending=null;
   if(!save()){game.drawn.pop();game.pending=previous;cleanTimers();notice('数字の保存に失敗しました。再読み込みせず、端末の保存設定をご確認ください。',true);return}
-  cleanTimers();['historyNav','historyLink'].forEach(id=>$(id).removeAttribute('aria-disabled'));refreshDisplay();if(judgeState.justBingo.length){$('resultLine').textContent=`🎉 今回 ${judgeState.justBingo.length}枚がビンゴ！`;toast(`🎉 BINGO！ No.${judgeState.justBingo.map(id=>String(id).padStart(3,'0')).join('・No.')}`)}finishSound();if(updateAvailable)reloadFresh();
+  cleanTimers();['historyNav','historyLink'].forEach(id=>$(id).removeAttribute('aria-disabled'));refreshDisplay();if(judgeState.justBingo.length){$('resultLine').textContent=`🎉 今回 ${judgeState.justBingo.length}枚がビンゴ！`;toast(`🎉 BINGO！ No.${judgeState.justBingo.map(id=>String(id).padStart(3,'0')).join('・No.')}`)}finishSound();if(hostCode)syncCloud();if(updateAvailable&&!hostCode)reloadFresh();
 }
 function animateRoll(){if(!game||!game.pending)return;const elapsed=Date.now()-game.pending.startedAt, duration=game.pending.durationMs||4000;
   if(elapsed>=duration){finishDraw();return}
@@ -290,7 +322,7 @@ function animateRoll(){if(!game||!game.pending)return;const elapsed=Date.now()-g
   const progress=elapsed/duration;const delay=progress>.85?185:progress>.62?110:65;
   timeoutId=setTimeout(()=>animationFrame=requestAnimationFrame(animateRoll),delay)
 }
-function startDraw(){if(!game||!cardsReady||rolling||game.pending||game.drawn.length>=75)return;closeResults();
+function startDraw(){if(!game||!cardsReady||rolling||game.pending||game.drawn.length>=75||cloudDrawBlocked())return;closeResults();
   const remaining=remainingNumbers();if(!remaining.length)return;
   const number=remaining[randomIndex(remaining.length)]; // Actual number selected uniformly and reserved BEFORE animation.
   game.pending={number,startedAt:Date.now(),durationMs:speedSeconds*1000};
@@ -306,8 +338,8 @@ function restorePending(){if(!game||!game.pending)return;
   $('historyNav').setAttribute('aria-disabled','true');$('historyLink').setAttribute('aria-disabled','true');
   animateRoll();toast('途中だった抽選を再開しました。音は次の抽選から鳴ります。');
 }
-function resetGame(){if(!game||rolling)return;if(!confirm('抽選したすべての数字を消して、最初からやり直しますか？ この操作は元に戻せません。'))return;
-  closeResults();const old=game;game={version:1,selectedCards:[...old.selectedCards],drawn:[],pending:null,createdAt:Date.now()};if(!save()){game=old;return}notice('');refreshDisplay();toast('新しいゲームを始めました！')
+function resetGame(){if(!game||rolling||cloudDrawBlocked())return;if(!confirm('抽選したすべての数字を消して、最初からやり直しますか？ この操作は元に戻せません。'))return;
+  closeResults();const old=game;game={version:1,selectedCards:[...old.selectedCards],drawn:[],pending:null,createdAt:Date.now()};if(!save()){game=old;return}notice('');refreshDisplay();toast('新しいゲームを始めました！');if(hostCode)syncCloud()
 }
 $('rollButton').addEventListener('click',startDraw);
 $('restartButton').addEventListener('click',resetGame);
@@ -318,18 +350,105 @@ window.addEventListener('pagehide',()=>{stopRattle();clearTimeout(timeoutId);can
 // Update check is bypass-cache; defer refreshing until any roll has been committed.
 function reloadFresh(){const url=new URL(location.href);url.searchParams.set('dango_update',String(Date.now()));location.replace(url.href)}
 async function checkUpdates(){if(updateBusy||document.visibilityState==='hidden'||navigator.onLine===false)return;updateBusy=true;
-  try{const url=new URL('game.html',document.baseURI);url.searchParams.set('_fresh',String(Date.now()));const res=await fetch(url,{cache:'no-store'});if(!res.ok)return;
-    const source=await res.text();const remoteDoc=new DOMParser().parseFromString(source,'text/html');
-    const remoteCode=remoteDoc.querySelector('body script')?.textContent;
-    const currentCode=document.querySelector('body script')?.textContent;
-    const remoteStyle=remoteDoc.querySelector('style')?.textContent;
-    const currentStyle=document.querySelector('style')?.textContent;
-    if(remoteCode&&((remoteCode!==currentCode)||(remoteStyle!==currentStyle))){updateAvailable=true;if(!rolling)reloadFresh()}
+  try{const url=new URL('./game.html',location.href);url.searchParams.set('_fresh',String(Date.now()));const res=await fetch(url,{cache:'no-store'});if(!res.ok)return;
+    const doc=new DOMParser().parseFromString(await res.text(),'text/html');
+    const remote=Number(doc.querySelector('meta[name="dango-app-version"]')?.content||0);
+    if(remote>11){updateAvailable=true;if(!rolling&&!hostCode)reloadFresh();else toast('新版があります。共有終了後に更新してください。')}
   }catch{}finally{updateBusy=false}}
 document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible'){loadPreferences();if(game?.pending && Date.now()>=game.pending.startedAt+(game.pending.durationMs||4000))finishDraw();checkUpdates()}});
 window.addEventListener('focus',checkUpdates);
+
+// Optional Firebase extension. The non-sharing game keeps working without loading the SDK.
+const firebaseFiles=[
+ 'https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js',
+ 'https://www.gstatic.com/firebasejs/10.14.1/firebase-auth-compat.js',
+ 'https://www.gstatic.com/firebasejs/10.14.1/firebase-database-compat.js',
+ './dango-firebase.js'
+];
+function loadCloudScripts(){if(cloudInitPromise)return cloudInitPromise;
+ cloudInitPromise=(async()=>{for(const src of firebaseFiles){await new Promise((resolve,reject)=>{const script=document.createElement('script');script.src=src;script.onload=resolve;script.onerror=()=>reject(new Error('Firebaseの読み込みに失敗しました。ネット接続を確認してください'));document.head.appendChild(script)})}
+ if(!window.DangoFirebase)throw new Error(window.DangoFirebaseError||'Firebase初期設定に失敗しました');
+ cloudUser=await window.DangoFirebase.signIn();
+ if(!cloudConnectionAttached){cloudConnectionAttached=true;window.DangoFirebase.db.ref('.info/connected').on('value',snap=>{cloudOnline=!!snap.val();updateSharePanel();refreshDisplay();if(hostCode&&cloudOnline&&cloudReady&&cloudError)syncCloud()})}
+ return window.DangoFirebase;
+ })().catch(err=>{cloudInitPromise=null;throw err});return cloudInitPromise
+}
+function selectedFingerprint(){return game?.selectedCards?.join(',')||''}
+function updateSharePanel(){
+ const has=!!hostCode;
+ $('shareCode').hidden=!has;$('shareCode').textContent=has?hostCode:'';
+ $('createShare').hidden=has;$('createShare').disabled=!game||!cardsReady||rolling||cloudBusy;
+ for(const id of ['copyCode','copyLink','stopShare'])$(id).hidden=!has;
+ $('retrySync').hidden=!has||!cloudError;
+ $('shareStatus').textContent=has?(cloudError?'⚠ '+cloudError:cloudBusy?'⏳ 同期中…':cloudOnline&&cloudReady?'🟢 リアルタイム共有中':'🟠 接続待機中'):'未接続です。発行後に子端末からゲームIDを入力します。';
+ $('shareStatus').classList.toggle('bad',!!cloudError);
+}
+async function setupHost(code){
+ const api=await loadCloudScripts();
+ const ref=api.db.ref('sessions/'+code);const snapshot=await ref.once('value');const value=snapshot.val();
+ if(!value||value.ownerUid!==cloudUser.uid||!Array.isArray(value.selectedCards)||value.selectedCards.join(',')!==selectedFingerprint())throw Error('連携先の所有者またはカード構成が一致しません。元の端末を確認してください');
+ hostCode=code;hostRef=ref;cloudReady=true;cloudError='';updateSharePanel();refreshDisplay();
+ await syncCloud();
+}
+async function startShare(){if(!game||!cardsReady||rolling||cloudBusy||hostCode)return;
+ cloudBusy=true;cloudError='';updateSharePanel();
+ try{
+  const api=await loadCloudScripts();
+  if(!cloudOnline)throw Error('Firebaseとの通信が確立するまでお待ちください');
+  let code,ref,created=false;
+  for(let t=0;t<5&&!created;t++){
+   const arr=new Uint32Array(1);crypto.getRandomValues(arr);code=String(10000000+(arr[0]%90000000));
+   ref=api.db.ref('sessions/'+code);
+   const record={ownerUid:cloudUser.uid,selectedCards:[...game.selectedCards],drawn:[...game.drawn],createdAt:api.serverTimestamp(),updatedAt:api.serverTimestamp()};
+   const result=await ref.transaction(data=>data===null?record:undefined,undefined,false);
+   created=result.committed;
+  }
+  if(!created)throw Error('ゲームIDを発行できませんでした。もう一度お試しください');
+  hostCode=code;hostRef=ref;cloudReady=true;localStorage.setItem(CLOUD_MARKER_KEY,JSON.stringify({code,selected:selectedFingerprint()}));
+  toast('ゲームID '+code+' を発行しました！');
+ }catch(err){cloudError=err.message||String(err);notice('端末連携: '+cloudError,true)}
+ finally{cloudBusy=false;updateSharePanel();refreshDisplay()}
+}
+async function syncCloud(){
+ if(!hostCode||!hostRef||!game||cloudBusy)return;
+ if(hostMarker()?.selected!==selectedFingerprint()){cloudError='選択カードが変更されました。共有を終了して新しいIDを発行してください';updateSharePanel();refreshDisplay();return}
+ if(!cloudOnline||!cloudReady){cloudError='通信が切断されました';updateSharePanel();refreshDisplay();return}
+ cloudBusy=true;cloudError='';updateSharePanel();refreshDisplay();
+ try{
+  await hostRef.update({drawn:game.drawn.length?[...game.drawn]:null,updatedAt:window.DangoFirebase.serverTimestamp()});
+  cloudError='';notice('');
+ }catch(err){cloudError='同期に失敗しました。通信状況を確認し、「再同期する」を押してください';notice(cloudError,true)}
+ finally{cloudBusy=false;updateSharePanel();refreshDisplay()}
+}
+async function restoreHost(){
+ const marker=hostMarker();if(!marker||!game||marker.selected!==selectedFingerprint())return;
+ hostCode=marker.code;cloudReady=false;cloudError='';updateSharePanel();refreshDisplay();
+ try{await setupHost(marker.code)}catch(err){cloudError=err.message||String(err);updateSharePanel();refreshDisplay();notice('端末連携の復旧に失敗しました。'+cloudError,true)}
+}
+async function stopShare(){if(!hostCode||cloudBusy)return;
+ if(!confirm('ゲームID '+hostCode+' の共有を終了しますか？ 子端末では結果を確認できなくなります。'))return;
+ cloudBusy=true;updateSharePanel();
+ try{if(!cloudOnline||!hostRef)throw Error('通信接続が必要です');await hostRef.remove();
+  hostCode=null;hostRef=null;cloudReady=false;cloudError='';localStorage.removeItem(CLOUD_MARKER_KEY);toast('端末連携を終了しました')
+ }catch(err){
+  cloudError='サーバー側の連携終了に失敗しました。'+(err.message||'');
+  if(confirm('通信ができないか、親端末の認証情報が変わっています。サーバー上のゲームは残る可能性がありますが、この端末の連携だけ解除しますか？')){
+    hostCode=null;hostRef=null;cloudReady=false;cloudError='';try{localStorage.removeItem(CLOUD_MARKER_KEY)}catch{};toast('この端末の連携設定を解除しました');
+  }else{notice(cloudError,true)}
+ }
+ finally{cloudBusy=false;updateSharePanel();refreshDisplay()}
+}
+async function copyText(value){try{await navigator.clipboard.writeText(value);toast('コピーしました')}catch{window.prompt('こちらをコピーしてください',value)}}
+$('shareToggle').addEventListener('click',()=>{$('sharePanel').hidden=!$('sharePanel').hidden;updateSharePanel();if(!$('sharePanel').hidden)$('sharePanel').scrollIntoView({block:'nearest',behavior:'smooth'})});
+$('shareClose').addEventListener('click',()=>$('sharePanel').hidden=true);
+$('createShare').addEventListener('click',startShare);
+$('stopShare').addEventListener('click',stopShare);
+$('retrySync').addEventListener('click',async()=>{if(!cloudReady){try{await setupHost(hostCode)}catch(err){cloudError=err.message||String(err);updateSharePanel()}}else await syncCloud()});
+$('copyCode').addEventListener('click',()=>{if(hostCode)copyText(hostCode)});
+$('copyLink').addEventListener('click',()=>{if(hostCode)copyText(new URL('./watch.html?id='+hostCode,location.href).href)});
+
 loadPreferences();game=readJSON(GAME_KEY);
-if(!validGame(game)){game=null;refreshDisplay()}else{refreshDisplay();restorePending();loadCardGrids()}
+if(!validGame(game)){game=null;refreshDisplay()}else{refreshDisplay();restorePending();loadCardGrids().then(()=>{updateSharePanel()})}updateSharePanel();restoreHost()
 setInterval(checkUpdates,60000);
 </script>
 </body>

@@ -9,7 +9,7 @@
   <meta name="apple-mobile-web-app-title" content="DANGO" />
   <meta name="description" content="DANGO — ビンゴ大会のカード選択をもっとかんたんに。" />
   <meta name="dango-app" content="dango-card-picker-v9-stable-updates" />
-  <meta name="dango-app-version" content="10" />
+  <meta name="dango-app-version" content="11" />
   <title>DANGO | ビンゴをもっとたのしく。</title>
   <link rel="icon" type="image/png" href="./dango_icon.png" />
   <link rel="apple-touch-icon" href="./dango_icon.png" />
@@ -183,11 +183,12 @@
             <div class="start-area">
               <button id="startGameBtn" class="start-button" type="button" disabled>🎱 ゲームを始める　➜</button>
               <p class="start-note">選んだカードだけを使って抽選します。抽選画面は別ページで開きます。</p>
+              <a href="./watch.html" style="display:block;margin:17px auto 0;width:fit-content;padding:12px 20px;border:2px solid #e9d5f5;border-radius:18px;background:#f7eefe;color:#7c5395;font-weight:900;font-size:14px">📡 確認端末として参加（ゲームID入力） →</a>
             </div>
           </div>
           <div id="dataNotice" class="notice" hidden></div>
         </section>
-        <p class="footer">選択したカード番号は、この端末に自動保存されます。<br>別端末への同期は今後の開発で対応予定です。</p>
+        <p class="footer">選択したカード番号は、この端末に自動保存されます。<br>別端末で当選結果を見る場合は、抽選担当が「端末連携」で発行したゲームIDを入力します。</p>
         <footer class="dango-copyright">© 2021–2026 dobhar-chu</footer>
       </main>
       <div id="toast" class="toast" role="status" hidden></div>
@@ -354,10 +355,10 @@
 
     // バージョン番号で比較する。DOM全体の比較ではSafariの履歴復元やCDNの旧版で誤通知が出る。
     // index.html を更新するときは、meta[name="dango-app-version"] を必ず増やす。
-    const APP_VERSION = 10;
+    const APP_VERSION = 11;
     let checkingUpdate = false;
     let newerVersion = 0;
-    const UPDATE_ATTEMPT_KEY = 'dango.updateAttempt.v10';
+    const UPDATE_ATTEMPT_KEY = 'dango.updateAttempt.v11';
 
     function reloadFresh() {
       const url = new URL('./index.html',document.baseURI);
