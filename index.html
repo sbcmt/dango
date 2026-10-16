@@ -1,407 +1,134 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="ja">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-  <meta name="theme-color" content="#f74783" />
-  <meta name="apple-mobile-web-app-capable" content="yes" />
-  <meta name="apple-mobile-web-app-status-bar-style" content="default" />
-  <meta name="apple-mobile-web-app-title" content="DANGO" />
-  <meta name="description" content="DANGO — ビンゴ大会のカード選択をもっとかんたんに。" />
-  <meta name="dango-app" content="dango-card-picker-v9-stable-updates" />
-  <meta name="dango-app-version" content="11" />
-  <title>DANGO | ビンゴをもっとたのしく。</title>
-  <link rel="icon" type="image/png" href="./dango_icon.png" />
-  <link rel="apple-touch-icon" href="./dango_icon.png" />
-  <link rel="manifest" href="./manifest.webmanifest" />
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@500;700;900&display=swap" rel="stylesheet" />
-  <style>
-    :root {
-      --pink:#f74783; --pink-deep:#df2f70; --pink-soft:#ffe1ec;
-      --cream:#fffdf6; --yellow:#ffd962; --mint:#d6f29c;
-      --lilac:#eadfff; --ink:#553946; --muted:#826f78;
-      --line:#f3dce5; --white:#fff; --shadow:0 14px 42px rgba(144,59,93,.10);
-    }
-    * {box-sizing:border-box}
-    html {scroll-behavior:smooth}
-    body {margin:0; min-height:100vh; color:var(--ink); font-family:'Zen Maru Gothic','Hiragino Maru Gothic ProN','Yu Gothic',sans-serif; font-weight:700;
-      background: radial-gradient(circle at 10% 10%,#ffe5ab 0,transparent 25%), radial-gradient(circle at 95% 1%,#ffd5e3 0,transparent 35%), linear-gradient(180deg,#fff3f6,#fffdf6 68%); }
-    button {font:inherit; -webkit-tap-highlight-color:transparent; cursor:pointer; touch-action:manipulation}
-    button:focus-visible {outline:3px solid #7146cc;outline-offset:3px}
-    [hidden] {display:none !important}
-    .dango-copyright{margin:20px auto 5px;text-align:center;font-size:11px;font-weight:700;letter-spacing:.03em;color:#957f89}
-    .wrap {max-width:920px;margin:0 auto;padding:24px 18px 46px}
-    .hero {display:flex;align-items:center;gap:18px;padding:12px 4px 25px}
-    .brand {min-width:0}
-    .brand h1 {margin:0;display:flex;gap:.035em;align-items:center;font-size:clamp(38px,6.7vw,58px);font-weight:900;letter-spacing:-.025em;line-height:1.15}
-    .brand h1 span {display:inline-block;color:var(--pink-deep);-webkit-text-stroke:1.2px #81435b;text-shadow:1px 3px 0 #fff,3px 6px 0 rgba(132,60,96,.17);transform:rotate(-6deg)}
-    .brand h1 span:nth-child(1){color:#fa6b9e;transform:rotate(-7deg)}
-    .brand h1 span:nth-child(2){color:#ffc74a;transform:rotate(4deg)}
-    .brand h1 span:nth-child(3){color:#82c9a0;transform:rotate(-4deg)}
-    .brand h1 span:nth-child(4){color:#ab89e6;transform:rotate(6deg)}
-    .brand h1 span:nth-child(5){color:#ff9a57;transform:rotate(-5deg)}
-    .brand h1:after{content:'✦';color:#f6b83c;font-size:25px;-webkit-text-stroke:0;text-shadow:none;align-self:flex-start;transform:rotate(15deg);margin-left:2px}
+<link rel="icon" type="image/png" sizes="64x64" href="./assets/favicon-customer.png?v=20261016-icon-1">
+<link rel="shortcut icon" href="./assets/favicon-customer.ico?v=20261016-icon-1">
+<link rel="apple-touch-icon" sizes="180x180" href="./myexpobag_icon_180.png?v=20261016-icon-1">
+<link rel="manifest" href="./manifest.webmanifest?v=20261016-icon-1">
+<meta name="apple-mobile-web-app-title" content="MyExpoBag">
 
-    .brand p {margin:8px 0 0;font-size:14px;color:#896877}
-    .hero-tools{margin-left:auto;display:flex;align-items:center;gap:8px;flex-wrap:wrap;justify-content:flex-end}
-    .settings-link{display:inline-flex;align-items:center;justify-content:center;white-space:nowrap;border:1px solid #f3c3d4;background:#fff1f6;color:#bd3c76;border-radius:100px;padding:9px 13px;font-size:12px;font-weight:900;text-decoration:none}
-    .settings-link:focus-visible{outline:3px solid #7146cc;outline-offset:3px}
-    .version-pill {margin-left:0;align-self:start;background:var(--white);border:1px solid var(--line);border-radius:100px;padding:7px 12px;color:#a66c82;font-size:11px;white-space:nowrap}
-    .panel {background:rgba(255,255,255,.96);border:2px solid #fff;border-radius:28px;box-shadow:var(--shadow);padding:24px}
-    .intro {display:flex;align-items:center;justify-content:space-between;gap:12px}
-    .eyebrow {font-size:12px;color:var(--pink-deep);font-weight:900;letter-spacing:.1em}
-    .panel h2 {font-size:clamp(21px,3.8vw,28px);line-height:1.3;margin:4px 0}
-    .sub {color:var(--muted);font-size:13px;line-height:1.65;margin:5px 0 0}
-    .sticker {font-size:35px;background:#fff4cf;border-radius:17px;padding:9px;transform:rotate(7deg)}
-    .stats {display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:21px 0 23px}
-    .stat {background:var(--pink-soft);border-radius:19px;padding:13px 17px}
-    .stat:nth-child(2) {background:#f0e9ff}
-    .stat small {display:block;color:#895d71;font-size:12px}
-    .stat strong {display:block;font-size:clamp(23px,4vw,31px);line-height:1.25;letter-spacing:.02em}
-    .stat strong span {font-size:13px;color:#8b7380;margin-left:4px}
-    .section-head {display:flex;align-items:center;justify-content:space-between;gap:12px;margin:6px 0 12px}
-    .section-head h3 {margin:0;font-size:17px}
-    .section-head small {font-size:12px;color:var(--muted)}
-    .tabs {display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:8px;margin-bottom:17px}
-    .tab {border:2px solid transparent;background:#fff1f5;color:#a65e78;border-radius:16px;padding:13px 7px 10px;min-width:0;transition:transform .12s ease,background .15s ease}
-    .tab:active, .card-select:active, .all-button:active {transform:scale(.96)}
-    .tab .letter {display:block;font-size:22px;font-weight:900;line-height:1.1}
-    .tab .count {display:block;font-size:10px;margin-top:4px;white-space:nowrap}
-    .tab.active {background:var(--pink);color:#fff;border-color:var(--pink-deep);box-shadow:0 5px 0 #d63574}
-    .tab.active .count {color:#ffe4ef}
-    .tools {display:flex;align-items:center;justify-content:space-between;gap:10px;margin:14px 0}
-    .all-button {border:0;border-radius:100px;background:var(--mint);color:#345125;padding:11px 17px;font-size:13px;font-weight:900}
-    .all-button:disabled {opacity:.45;cursor:not-allowed}
-    .range {font-size:13px;color:var(--muted);font-weight:900}
-    .tiles {display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:9px}
-    .tile {min-width:0;position:relative}
-    .card-select {border:2px solid #f0e5e9;background:#f6f3f4;color:#b8abb1;min-height:89px;width:100%;border-radius:16px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;padding:10px 3px}
-    .card-select .card-no {font-size:clamp(15px,3vw,20px);font-weight:900;letter-spacing:-.02em}
-    .card-select .card-status {font-size:10px;font-weight:900;line-height:1.1}
-    .card-select.unregistered {cursor:not-allowed;opacity:.72}
-    .card-select.registered {background:var(--cream);color:var(--ink);border-color:#f4c9d9}
-    .card-select.registered .card-status {color:#d36f95}
-    .card-select.selected {background:#ffdfec;color:#a72b62;border-color:var(--pink);box-shadow:inset 0 0 0 1px #ff96bb}
-    .card-select.selected .card-status {color:#c32d6a}
-    .card-select.selected:before {content:'✓';position:absolute;top:-5px;right:-4px;display:grid;place-items:center;background:var(--pink);color:#fff;border-radius:50%;height:20px;width:20px;font-size:12px;font-weight:900;border:2px solid white}
-    .card-preview {position:absolute;right:3px;bottom:4px;border:0;border-radius:12px;padding:3px 7px;background:#fff;color:#aa5c7c;font-size:10px;box-shadow:0 1px 4px #a0557633}
-    .tip {display:flex;gap:8px;align-items:flex-start;border-radius:14px;padding:12px 14px;background:#fff5d9;color:#8e723d;font-size:12px;line-height:1.7;margin-top:17px}
-    .chosen {margin-top:18px;background:#fffbfd;border-radius:20px;border:1px dashed #edbbcd;padding:17px}
-    .chosen-top {display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap}
-    .chosen h3 {margin:0;font-size:16px}
-    .reset {border:none;background:transparent;color:#b05b79;font-weight:900;font-size:12px;text-decoration:underline;padding:6px}
-    .chosen-list {display:flex;gap:7px;flex-wrap:wrap;margin-top:12px;min-height:34px;align-items:center}
-    .chosen-chip {border:1px solid #f5bcce;background:#fff0f5;color:#ae416c;border-radius:100px;padding:6px 10px;font-size:13px}
-    .chosen-chip span {margin-left:6px;font-size:12px}
-    .start-area {margin-top:18px;padding-top:16px;border-top:1px dashed #ebc0cf}
-    .start-button {width:100%;border:0;border-radius:18px;background:linear-gradient(120deg,#ec3e84,#fa72a6);color:#fff;box-shadow:0 6px 0 #bd2e68,0 12px 26px #ee4f8935;padding:17px 15px;font-size:20px;font-weight:900;letter-spacing:.015em;transition:transform .12s ease,box-shadow .12s ease}
-    .start-button:not(:disabled):active {transform:translateY(4px);box-shadow:0 2px 0 #bd2e68}
-    .start-button:disabled {background:#ddd1d6;color:#f5f0f1;box-shadow:none;cursor:not-allowed}
-    .start-note {text-align:center;margin:12px 0 0;color:#9a7083;font-size:12px}
-    .empty {color:#a39199;font-size:13px;font-weight:500}
-    .footer {margin:22px 2px 0;color:#9a8390;text-align:center;font-size:12px;line-height:1.7}
-    .notice {margin-top:13px;border-radius:16px;padding:13px 16px;background:#fff0dc;color:#8b5c21;font-size:13px;line-height:1.6}
-    .notice.error {background:#ffe2e6;color:#a52349}
-    .toast {position:fixed;bottom:max(20px,env(safe-area-inset-bottom));left:50%;transform:translateX(-50%);background:#533644;color:#fff;padding:13px 20px;border-radius:100px;box-shadow:0 12px 30px #4f22375b;font-size:13px;white-space:nowrap;z-index:30;max-width:calc(100vw - 30px);text-align:center;white-space:normal}
-    .update-bar {position:fixed;left:12px;right:12px;bottom:max(14px,env(safe-area-inset-bottom));z-index:15;margin:auto;max-width:550px;background:#533644;color:#fff;border-radius:19px;padding:13px 15px;display:flex;justify-content:space-between;align-items:center;gap:12px;box-shadow:0 8px 36px #5a2d4655;font-size:13px}
-    .update-bar button {background:var(--yellow);border:0;border-radius:12px;padding:10px 13px;color:#523d2b;font-size:12px;font-weight:900;white-space:nowrap}
-    dialog {border:0;border-radius:24px;padding:20px;max-width:min(94vw,440px);width:100%;box-shadow:0 25px 80px #4c22374d;color:var(--ink);background:#fffdfb}
-    dialog::backdrop {background:#442a39aa;backdrop-filter:blur(3px)}
-    .dialog-head {display:flex;justify-content:space-between;align-items:center;margin-bottom:14px}
-    .dialog-head h3 {margin:0;font-size:19px}
-    .close {width:36px;height:36px;border:0;background:#ffe5eb;border-radius:50%;font-weight:900;color:#9d3d68;font-size:19px}
-    .bingo-grid {width:100%;border-collapse:separate;border-spacing:5px;table-layout:fixed;text-align:center}
-    .bingo-grid th {font-size:19px;background:var(--pink);color:#fff;padding:7px 1px;border-radius:9px}
-    .bingo-grid td {padding:10px 1px;background:#fff0f5;border-radius:9px;font-size:15px;font-weight:900}
-    .bingo-grid td.free {background:var(--mint);font-size:11px}
-    .dialog-note {font-size:12px;color:var(--muted);line-height:1.7;margin:13px 0 0}
-    @media (max-width:540px) {
-      .wrap {padding:16px 11px 28px}
-      .hero {gap:12px;padding:7px 7px 18px}
-      .brand h1 {font-size:clamp(37px,10vw,49px)}
-      .brand p {font-size:11px;margin-top:5px}
-      .hero-tools{margin-left:auto;display:flex;align-items:center;gap:8px;flex-wrap:wrap;justify-content:flex-end}
-    .settings-link{display:inline-flex;align-items:center;justify-content:center;white-space:nowrap;border:1px solid #f3c3d4;background:#fff1f6;color:#bd3c76;border-radius:100px;padding:9px 13px;font-size:12px;font-weight:900;text-decoration:none}
-    .settings-link:focus-visible{outline:3px solid #7146cc;outline-offset:3px}
-    .version-pill {font-size:9px;padding:5px 7px}
-      .panel {padding:17px 13px;border-radius:22px}
-      .sticker {font-size:27px}
-      .stat {padding:10px 12px}
-      .tabs {gap:5px}
-      .tab {padding:12px 3px 9px;border-radius:13px}
-      .tab .count {font-size:9px}
-      .tiles {gap:6px}
-      .card-select {min-height:75px;border-radius:12px;padding:8px 2px 13px}
-      .card-select .card-status {font-size:9px}
-      .card-preview {right:2px;bottom:3px;font-size:9px;padding:2px 5px}
-      .card-select.selected:before {height:17px;width:17px;font-size:10px}
-    }
-    @media (prefers-reduced-motion:reduce) {*,*:before,*:after {transition:none!important;scroll-behavior:auto!important}}
-  </style>
-</head>
-<body>
-  <div id="app" data-dango-app="v10"></div>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"/>
+  <meta name="theme-color" content="#315746"/>
+  <meta name="description" content="MY EXPO BAG — 展示会で気になった商品をひとつのBAGに。"/>
+  <title>MyExpoBag</title>
+  <!-- Home screen icon: place myexpobag_icon.png next to index.html -->
+  
+  
+  
+  
+  <meta name="apple-mobile-web-app-capable" content="yes"/>
+  <meta name="apple-mobile-web-app-status-bar-style" content="black"/>
+  <!-- Network-only service worker: no stale copies of app files are served. -->
   <script>
-    'use strict';
-    // DANGO card picker v4. D-type No.151-200 and E-type No.201-250 transcribed from real photographs. No external source of numbers.
-    const LETTERS = ['A','B','C','D','E'];
-    const SELECTED_KEY = 'dango.selectedCards.v1';
-    const CARD_URL = './cards.json';
-    let activeType = 'D';
-    let selected = new Set();
-    let cards = new Map();
-    let cardsSourceText = '';
-    let toastTimeout;
-    let updateInProgress = false;
-
-    const app = document.getElementById('app');
-    app.innerHTML = `
-      <main class="wrap">
-        <header class="hero">
-          <div class="brand"><h1 aria-label="DANGO"><span aria-hidden="true">D</span><span aria-hidden="true">A</span><span aria-hidden="true">N</span><span aria-hidden="true">G</span><span aria-hidden="true">O</span></h1><p>ビンゴを、もっとたのしく。</p></div>
-          <div class="hero-tools"><a class="settings-link" href="./setting.html?from=cards">⚙ 設定</a><span class="version-pill">DANGO v10</span></div>
-        </header>
-        <section class="panel" aria-labelledby="pageTitle">
-          <div class="intro">
-            <div><div class="eyebrow">STEP 01 / カードの準備</div><h2 id="pageTitle">使うカードを選ぼう！</h2><p class="sub">A〜Eを選んで、使用するカード番号をタップしてね。</p></div>
-            <span class="sticker" aria-hidden="true">🎯</span>
-          </div>
-          <div class="stats">
-            <div class="stat"><small>登録済みカード</small><strong id="registeredCount">—<span> / 250枚</span></strong></div>
-            <div class="stat"><small>今回使うカード</small><strong id="selectedCount" aria-live="polite">0<span>枚</span></strong></div>
-          </div>
-          <div class="section-head"><h3>カードの種類</h3><small>5種類から選択</small></div>
-          <nav class="tabs" aria-label="カードの種類" id="typeTabs"></nav>
-          <div class="tools"><span id="rangeText" class="range"></span><button id="allButton" class="all-button" type="button">ALL 登録済みを選択</button></div>
-          <div id="tiles" class="tiles" aria-label="カード番号"></div>
-          <div class="tip"><span aria-hidden="true">💡</span><span>グレーのカードは「未登録」なので選べません。ALLは表示中の種類にある登録済みカードだけを選択します。</span></div>
-          <div class="chosen">
-            <div class="chosen-top"><h3>🍡 今回使うカード <span id="chosenInlineCount">(0枚)</span></h3><button id="clearButton" class="reset" type="button">選択をすべて解除</button></div>
-            <div class="chosen-list" id="chosenList" aria-live="polite"></div>
-            <div class="start-area">
-              <button id="startGameBtn" class="start-button" type="button" disabled>🎱 ゲームを始める　➜</button>
-              <p class="start-note">選んだカードだけを使って抽選します。抽選画面は別ページで開きます。</p>
-              <a href="./watch.html" style="display:block;margin:17px auto 0;width:fit-content;padding:12px 20px;border:2px solid #e9d5f5;border-radius:18px;background:#f7eefe;color:#7c5395;font-weight:900;font-size:14px">📡 確認端末として参加（ゲームID入力） →</a>
-            </div>
-          </div>
-          <div id="dataNotice" class="notice" hidden></div>
-        </section>
-        <p class="footer">選択したカード番号は、この端末に自動保存されます。<br>別端末で当選結果を見る場合は、抽選担当が「端末連携」で発行したゲームIDを入力します。</p>
-        <footer class="dango-copyright">© 2021–2026 dobhar-chu</footer>
-      </main>
-      <div id="toast" class="toast" role="status" hidden></div>
-      <div id="updateBar" class="update-bar" hidden><span>✨ DANGOの最新版があります</span><button id="updateNow" type="button">今すぐ更新</button></div>
-      <dialog id="previewDialog" aria-labelledby="dialogTitle">
-        <div class="dialog-head"><h3 id="dialogTitle">カードの数字</h3><button id="closeDialog" class="close" type="button" aria-label="閉じる">×</button></div>
-        <div id="previewContent"></div><p class="dialog-note">実物カードの写真から転記し、数字の重複と列範囲を検査したデータです。厳密な最終照合が済むまでは暫定データとして扱ってください。</p>
-      </dialog>`;
-
-    const $ = (id) => document.getElementById(id);
-    const pad = (id) => String(id).padStart(3,'0');
-    const rangeFor = (type) => {const index=LETTERS.indexOf(type);return {start:index*50+1,end:(index+1)*50};};
-    const escapeHTML = (s) => String(s).replace(/[&<>"']/g, (c)=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-
-    function showToast(message) {
-      const elem=$('toast');elem.textContent=message;elem.hidden=false;
-      clearTimeout(toastTimeout);toastTimeout=setTimeout(()=>{elem.hidden=true;},2400);
-    }
-    function readSelection() {
-      try { const ids=JSON.parse(localStorage.getItem(SELECTED_KEY) || '[]'); return Array.isArray(ids) ? new Set(ids.filter(Number.isInteger)) : new Set(); }
-      catch {return new Set();}
-    }
-    function persistSelection() {
-      try {localStorage.setItem(SELECTED_KEY,JSON.stringify([...selected].sort((a,b)=>a-b)));}
-      catch {showToast('保存できません。端末のストレージ設定をご確認ください');}
-    }
-    function cardValidation(raw) {
-      if (!raw || !Number.isInteger(raw.id) || raw.id<1 || raw.id>250 || !Array.isArray(raw.grid) || raw.grid.length !== 5) return false;
-      const seen=new Set();
-      for(let r=0;r<5;r++){
-        if(!Array.isArray(raw.grid[r]) || raw.grid[r].length!==5) return false;
-        for(let c=0;c<5;c++){
-          const n=raw.grid[r][c];
-          if(r===2 && c===2){if(n!==null)return false;continue;}
-          if(!Number.isInteger(n) || n<c*15+1 || n>c*15+15 || seen.has(n))return false;
-          seen.add(n);
+    (async () => {
+      'use strict';
+      // Displayed product version stays 1.0.1. Each launch fetches the real live files.
+      // No manual edit to release.json is required to detect an app/config update.
+      const files=['index.html','styles.css','firebase-config.js','customer-brand.js','customer-checkout.js','shipping-utils.js','qr.js','app.js'];
+      const cacheToken=String(Date.now())+'-'+Math.random().toString(36).slice(2,9);
+      const digest=text=>{
+        // Two independent lightweight 32-bit hashes. Only used for change detection.
+        let a=2166136261,b=0x9e3779b9;
+        for(let i=0;i<text.length;i++){
+          const c=text.charCodeAt(i);
+          a=Math.imul(a^c,16777619);
+          b=Math.imul(b^(c+i),2246822519);
         }
+        return (a>>>0).toString(16)+'-'+(b>>>0).toString(16)+'-'+text.length;
+      };
+      const requestFile=async name=>{
+        const url='./'+name+'?meb_fresh='+cacheToken;
+        const response=await fetch(url,{cache:'no-store',redirect:'follow'});
+        if(!response.ok)throw new Error(name+' HTTP '+response.status);
+        return {
+          text:await response.text(),
+          etag:response.headers.get('ETag') || null
+        };
+      };
+      const status=message=>{
+        const target=document.getElementById('view');
+        if(target)target.textContent=message;
+      };
+      // Registration must NOT cache index.html, JS or product data. The worker is
+      // network-only, including for iPhone's standalone Home Screen launch.
+      if(location.protocol==='https:' && 'serviceWorker' in navigator){
+        navigator.serviceWorker.register('./sw.js',{scope:'./',updateViaCache:'none'})
+          .then(reg=>reg.update().catch(()=>{}))
+          .catch(error=>console.warn('更新制御の登録に失敗:',error));
       }
-      return seen.size === 24;
-    }
-    async function getFreshCards() {
-      const url=new URL(CARD_URL,document.baseURI);
-      url.searchParams.set('_dango', String(Date.now()));
-      const response=await fetch(url.toString(),{cache:'no-store'});
-      if(!response.ok)throw new Error('cards.json HTTP '+response.status);
-      const text=await response.text();
-      const parsed=JSON.parse(text);
-      if(!parsed || !Array.isArray(parsed.cards))throw new Error('カードデータの形式が正しくありません');
-      const next=new Map();
-      for(const card of parsed.cards){
-        if(!cardValidation(card))throw new Error('カードNo.'+String(card?.id)+'のデータに問題があります');
-        if(next.has(card.id))throw new Error('カードNo.'+card.id+'が重複登録されています');
-        next.set(card.id,card);
-      }
-      return {text,next};
-    }
-    function setNotice(message,isError=false) {
-      const el=$('dataNotice');el.textContent=message;el.classList.toggle('error',isError);el.hidden=!message;
-    }
-    async function loadCards(initial=false) {
-      try {
-        const {text,next}=await getFreshCards();
-        if(text!==cardsSourceText) {
-          cards=next;cardsSourceText=text;
-          const valid=new Set([...selected].filter(id=>cards.has(id)));
-          if(valid.size!==selected.size){selected=valid;persistSelection();showToast('未登録になったカードを選択から外しました');}
-          render();
-          if(!initial)showToast('カード登録データを更新しました 🍡');
+      try{
+        const data=Object.create(null);
+        // Capture the actual bytes loaded into this session as an update baseline.
+        const all=await Promise.all(files.map(async name=>{
+          const record=await requestFile(name);
+          return [name,record];
+        }));
+        for(const [name,record] of all)data[name]=record.text;
+        window.MEB_ASSET_HASHES=Object.fromEntries(files.map(name=>[name,digest(data[name])]));
+        window.MEB_ASSET_ETAGS=Object.fromEntries(all.map(([name,record])=>[name,record.etag]));
+        window.MEB_DIGEST_TEXT=digest;
+        window.MEB_ASSET_FILES=files;
+        // Compatibility with current app data version; no longer an update signal.
+        window.MEB_CURRENT_BUILD='1.0.1';
+        const style=document.createElement('style');
+        style.setAttribute('data-meb-current-style','');
+        style.textContent=data['styles.css'];
+        document.head.appendChild(style);
+        if(document.readyState==='loading'){
+          await new Promise(resolve=>document.addEventListener('DOMContentLoaded',resolve,{once:true}));
         }
-        setNotice('');
-      } catch(error) {
-        if(initial){render();setNotice('カードデータを読み込めませんでした。GitHubの同じ場所に cards.json をアップロードしてください。',true);}
-        else {setNotice('カードデータの再確認に失敗しました。通信状態をご確認ください。',true);}
-        console.warn('DANGO data:',error);
+        const runScript=async filename=>{
+          const url=URL.createObjectURL(new Blob([data[filename]],{type:'text/javascript'}));
+          try{
+            await new Promise((resolve,reject)=>{
+              const script=document.createElement('script');
+              script.src=url;
+              script.onload=resolve;
+              script.onerror=()=>reject(new Error(filename));
+              document.body.appendChild(script);
+            });
+          }finally{URL.revokeObjectURL(url);}
+        };
+        // Read the validated, public brand routing record before rendering anything.
+        // A missing brand, unpublished brand or network problem must NEVER fall
+        // back to the sample FIELDNOTE catalog.
+        await runScript('firebase-config.js');
+        await runScript('customer-brand.js');
+        const requestedSlug=new URLSearchParams(location.search).get('brand');
+        // Installed Android PWA launches its static manifest start_url without a
+        // brand query; restore only the last successful explicit brand on this device.
+        // Explicit brand links are never overridden by local storage.
+        let slug=requestedSlug;
+        if(!slug){try{slug=localStorage.getItem('meb:last-brand')||'';}catch{slug='';}}
+        const customerConfig=await window.MEB_LOAD_CUSTOMER_BRAND(slug);
+        if(requestedSlug){try{localStorage.setItem('meb:last-brand',requestedSlug);}catch{}}
+        window.MEB_CONFIG=customerConfig;
+        const pl=document.getElementById('customer-privacy-link');
+        if(pl)pl.href='./privacy.html?brand='+encodeURIComponent(customerConfig.brand.id);
+        await import('./customer-checkout.js?asset=20261016-checkout-release-v101');
+        await runScript('shipping-utils.js');
+        await runScript('qr.js');
+        await runScript('app.js');
+      }catch(error){
+        console.error('アプリの最新データ取得に失敗:',error);
+        if(document.readyState==='loading'){
+          await new Promise(resolve=>document.addEventListener('DOMContentLoaded',resolve,{once:true}));
+        }
+        status(error?.customerMessage || 'ブランド情報を読み込めませんでした。正しいブランド専用URLを確認し、オンラインで開き直してください。');
       }
-    }
-    function render() {
-      const tabs=$('typeTabs'); tabs.replaceChildren();
-      for(const type of LETTERS){
-        const {start,end}=rangeFor(type);
-        const registered=[...cards.keys()].filter(id=>id>=start&&id<=end).length;
-        const tab=document.createElement('button');tab.type='button';tab.className='tab'+(type===activeType?' active':'');
-        tab.setAttribute('aria-pressed',String(type===activeType));
-        tab.innerHTML=`<span class="letter">${type}</span><span class="count">${registered} / 50</span>`;
-        tab.addEventListener('click',()=>{activeType=type;render();});tabs.appendChild(tab);
-      }
-      $('registeredCount').innerHTML=`${cards.size}<span> / 250枚</span>`;
-      $('selectedCount').innerHTML=`${selected.size}<span>枚</span>`;
-      $('chosenInlineCount').textContent=`(${selected.size}枚)`;
-      const {start,end}=rangeFor(activeType);
-      $('rangeText').textContent=`${activeType}タイプ　No.${pad(start)}〜${pad(end)}`;
-      const registeredIds=[...cards.keys()].filter(id=>id>=start&&id<=end).sort((a,b)=>a-b);
-      const allSelected=registeredIds.length>0&&registeredIds.every(id=>selected.has(id));
-      $('allButton').textContent=allSelected?'ALL 選択を解除':'ALL 登録済みを選択';
-      $('allButton').disabled=registeredIds.length===0;
-      const tiles=$('tiles');tiles.replaceChildren();
-      for(let id=start;id<=end;id++){
-        const registered=cards.has(id);const checked=selected.has(id);
-        const tile=document.createElement('div');tile.className='tile';
-        const btn=document.createElement('button');btn.type='button';
-        btn.className='card-select '+(registered?'registered':'unregistered')+(checked?' selected':'');
-        btn.disabled=!registered;btn.setAttribute('aria-pressed',String(checked));
-        btn.setAttribute('aria-label',`No.${pad(id)} ${!registered?'未登録':checked?'選択中':'登録済み'}`);
-        btn.innerHTML=`<span class="card-no">${pad(id)}</span><span class="card-status">${registered?(checked?'選択中':'登録済み'):'未登録'}</span>`;
-        if(registered)btn.addEventListener('click',()=>{checked?selected.delete(id):selected.add(id);persistSelection();render();});
-        tile.appendChild(btn);
-        if(registered){const preview=document.createElement('button');preview.type='button';preview.className='card-preview';preview.textContent='数字を見る';preview.setAttribute('aria-label',`No.${pad(id)}の数字を見る`);preview.addEventListener('click',()=>openPreview(id));tile.appendChild(preview);}
-        tiles.appendChild(tile);
-      }
-      const list=$('chosenList');list.replaceChildren();
-      if(selected.size===0){const span=document.createElement('span');span.className='empty';span.textContent='まだカードが選択されていません';list.appendChild(span);}
-      else for(const id of [...selected].sort((a,b)=>a-b)){
-        const chip=document.createElement('button');chip.type='button';chip.className='chosen-chip';
-        chip.innerHTML=`No.${pad(id)} <span aria-hidden="true">×</span>`;
-        chip.setAttribute('aria-label',`No.${pad(id)}を選択から外す`);
-        chip.addEventListener('click',()=>{selected.delete(id);persistSelection();render();});list.appendChild(chip);
-      }
-      $('startGameBtn').disabled=selected.size===0;
-      $('startGameBtn').textContent=selected.size?`🎱 ${selected.size}枚でゲームを始める　➜`:'🎱 カードを選んでね';
-      $('clearButton').disabled=selected.size===0;
-      $('clearButton').style.opacity=selected.size===0?'0.45':'1';
-    }
-    function openPreview(id) {
-      const card=cards.get(id);if(!card)return;
-      $('dialogTitle').textContent=`No.${pad(id)} のカード`;
-      const head='<tr>'+['B','I','N','G','O'].map(letter=>`<th scope="col">${letter}</th>`).join('')+'</tr>';
-      const rows=card.grid.map(row=>'<tr>'+row.map(n=>n===null?'<td class="free">FREE</td>':`<td>${n}</td>`).join('')+'</tr>').join('');
-      $('previewContent').innerHTML=`<table class="bingo-grid" aria-label="No.${pad(id)}の数字">${head}${rows}</table>`;
-      $('previewDialog').showModal();
-    }
-    $('closeDialog').addEventListener('click',()=>$('previewDialog').close());
-    $('previewDialog').addEventListener('click',(event)=>{if(event.target===$('previewDialog'))$('previewDialog').close();});
-    $('allButton').addEventListener('click',()=>{
-      const {start,end}=rangeFor(activeType);const ids=[...cards.keys()].filter(id=>id>=start&&id<=end);
-      if(ids.every(id=>selected.has(id)))ids.forEach(id=>selected.delete(id));
-      else ids.forEach(id=>selected.add(id));
-      persistSelection();render();
-    });
-    $('clearButton').addEventListener('click',()=>{
-      if(!selected.size)return;
-      if(!window.confirm(`選択した${selected.size}枚をすべて解除しますか？`))return;
-      selected.clear();persistSelection();render();showToast('カードの選択を解除しました');
-    });
-
-    $('startGameBtn').addEventListener('click',()=>{
-      if(selected.size===0){showToast('先にカードを選択してください');return;}
-      const valid=[...selected].every(id=>cards.has(id));
-      if(!valid){showToast('カードの読み込みが完了していません');return;}
-      const selectedCards=[...selected].sort((a,b)=>a-b);
-      const GAME_KEY='dango.gameSession.v1';
-      let previous=null;
-      try { previous=JSON.parse(localStorage.getItem(GAME_KEY)||'null'); } catch {}
-      const sameCards=previous && Array.isArray(previous.selectedCards) &&
-        JSON.stringify(previous.selectedCards)===JSON.stringify(selectedCards);
-      const hasProgress=previous && ((Array.isArray(previous.drawn) && previous.drawn.length>0) || previous.pending);
-      if(!sameCards && hasProgress && !window.confirm('使用するカードが変わりました。前の抽選履歴を消して新しいゲームを始めますか？'))return;
-      if(!sameCards || !previous || !Array.isArray(previous.drawn)) {
-        const next={version:1,selectedCards,drawn:[],pending:null,createdAt:Date.now()};
-        try { localStorage.setItem(GAME_KEY,JSON.stringify(next)); }
-        catch {showToast('抽選を保存できません。ブラウザの保存設定をご確認ください');return;}
-      }
-      window.location.assign('./game.html');
-    });
-
-    // バージョン番号で比較する。DOM全体の比較ではSafariの履歴復元やCDNの旧版で誤通知が出る。
-    // index.html を更新するときは、meta[name="dango-app-version"] を必ず増やす。
-    const APP_VERSION = 11;
-    let checkingUpdate = false;
-    let newerVersion = 0;
-    const UPDATE_ATTEMPT_KEY = 'dango.updateAttempt.v11';
-
-    function reloadFresh() {
-      const url = new URL('./index.html',document.baseURI);
-      url.searchParams.set('dango_build',String(newerVersion || APP_VERSION));
-      url.searchParams.set('dango_reload',String(Date.now()));
-      try { sessionStorage.setItem(UPDATE_ATTEMPT_KEY,JSON.stringify({version:newerVersion,at:Date.now()})); }catch{}
-      location.replace(url.href);
-    }
-    function getRemoteVersion(doc) {
-      const version = Number(doc.querySelector('meta[name="dango-app-version"]')?.content);
-      return Number.isInteger(version) && version > 0 ? version : 0;
-    }
-    async function checkHTMLUpdate() {
-      if(updateInProgress || checkingUpdate || document.visibilityState==='hidden' || navigator.onLine===false)return;
-      checkingUpdate = true;
-      try {
-        const url = new URL('./index.html',document.baseURI);
-        url.searchParams.set('_dango_check',String(Date.now()));
-        const response = await fetch(url.toString(),{cache:'no-store'});
-        if(!response.ok)return;
-        const remoteDoc = new DOMParser().parseFromString(await response.text(),'text/html');
-        const remoteVersion = getRemoteVersion(remoteDoc);
-        // 最新版と同じか、CDNに残った古い版なら何もしない。更新通知をループさせない。
-        if(remoteVersion <= APP_VERSION) { $('updateBar').hidden=true;return; }
-        newerVersion = remoteVersion;
-        updateInProgress = true;
-        let attempt=null;
-        try { attempt=JSON.parse(sessionStorage.getItem(UPDATE_ATTEMPT_KEY)||'null'); }catch{}
-        const recentlyTried=attempt && attempt.version===remoteVersion && Date.now()-attempt.at < 10*60*1000;
-        if(!recentlyTried){showToast('新しいDANGOに更新します ✨');setTimeout(reloadFresh,1400);}
-        else {$('updateBar').hidden=false;}
-      }catch(error){console.debug('DANGO update check:',error);}
-      finally {checkingUpdate = false;}
-    }
-    $('updateNow').addEventListener('click',reloadFresh);
-    async function checkAllUpdates() {await checkHTMLUpdate();if(!updateInProgress)await loadCards(false);}
-    document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible')checkAllUpdates();});
-    window.addEventListener('focus',checkAllUpdates);
-    window.addEventListener('online',checkAllUpdates);
-
-    // GitHub Pages の反映には多少の時間差があるが、旧版との誤検知は防止する。
-    selected=readSelection();render();loadCards(true).then(()=>setTimeout(checkHTMLUpdate,3000));
-    setInterval(checkAllUpdates,60000);
+    })();
   </script>
+<style id="meb-copyright-style">.meb-copyright{box-sizing:border-box;display:block;margin:16px auto 24px;padding:10px 14px;text-align:center;color:#8c98a0;font:11px/1.7 -apple-system,BlinkMacSystemFont,"Noto Sans JP",sans-serif;letter-spacing:.025em}@media print{.meb-copyright{display:none!important}}</style></head>
+<body>
+  <div class="app-shell" id="app">
+    <header class="site-header" id="site-header"></header>
+    <main id="view" tabindex="-1"></main>
+    <footer class="site-footer"><span>POWERED BY <strong>MY EXPO BAG</strong></span><span>v1.0.1</span><a id="customer-privacy-link" href="./privacy.html" style="color:inherit;text-decoration:underline;margin-left:12px">プライバシーポリシー</a></footer>
+  </div>
+  <div id="floating-bag" class="floating-bag-wrap" hidden></div>
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+  <div id="modal-root"></div>
+<div class="meb-copyright">© 2021–2026 dobhar-chu</div>
 </body>
 </html>
