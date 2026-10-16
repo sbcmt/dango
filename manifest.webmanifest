@@ -1,23 +1,16 @@
 {
-  "id": "./index.html",
-  "name": "MyExpoBag",
-  "short_name": "MyExpoBag",
-  "lang": "ja",
+  "name": "DANGO - ビンゴを、もっとたのしく。",
+  "short_name": "DANGO",
+  "id": "./",
   "start_url": "./index.html",
   "scope": "./",
   "display": "standalone",
-  "background_color": "#ffffff",
-  "theme_color": "#ffffff",
+  "background_color": "#fff3f6",
+  "theme_color": "#f74783",
   "icons": [
     {
-      "src": "./myexpobag_icon_192.png?v=20261016-brand-icons",
-      "sizes": "192x192",
-      "type": "image/png",
-      "purpose": "any"
-    },
-    {
-      "src": "./myexpobag_icon_512.png?v=20261016-brand-icons",
-      "sizes": "512x512",
+      "src": "./dango_icon.png",
+      "sizes": "any",
       "type": "image/png",
       "purpose": "any"
     }
