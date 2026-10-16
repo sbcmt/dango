@@ -7,7 +7,7 @@
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-title" content="DANGO">
   <meta name="dango-app" content="settings-v9-stable-updates">
-  <meta name="dango-app-version" content="9">
+  <meta name="dango-app-version" content="10">
   <title>ゲーム設定 | DANGO</title>
   <link rel="icon" href="./dango_icon.png" type="image/png">
   <link rel="apple-touch-icon" href="./dango_icon.png">
@@ -20,6 +20,7 @@
     *{box-sizing:border-box} [hidden]{display:none!important}
     html{color-scheme:light}body{margin:0;min-height:100vh;min-height:100dvh;background:radial-gradient(circle at 10% 8%,#ffedba 0,transparent 30%),radial-gradient(circle at 92% 2%,#ffd9e8 0,transparent 30%),linear-gradient(160deg,#fff2f6,#fffdf8 65%);color:var(--ink);font-family:'Zen Maru Gothic','Hiragino Maru Gothic ProN','Yu Gothic',sans-serif;font-weight:700}
     button,a,input{font:inherit;-webkit-tap-highlight-color:transparent}button{cursor:pointer;touch-action:manipulation}a{text-decoration:none;color:inherit}button:focus-visible,a:focus-visible,input:focus-visible{outline:3px solid #8550cf;outline-offset:3px}
+    .dango-copyright{margin:19px auto 5px;text-align:center;font-size:11px;font-weight:700;color:#927d89;letter-spacing:.03em}
     .shell{width:min(100%,790px);margin:0 auto;padding:20px 18px max(35px,env(safe-area-inset-bottom))}
     .top{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:19px}
     .brand{font-size:clamp(27px,5.5vw,36px);font-weight:900;display:flex;gap:.035em;letter-spacing:-.04em;filter:drop-shadow(1px 3px 0 #fff)}
@@ -79,6 +80,7 @@
       <a class="back" href="./index.html" id="backLink">✓ 設定完了！ カード選択へ</a>
       <p class="footnote">設定はこの端末のブラウザ内に保存されます。<br>抽選履歴や選択したカードは変更しません。</p>
     </main>
+    <footer class="dango-copyright">© 2021–2026 dobhar-chu</footer>
   </div>
   <script>
     'use strict';

@@ -9,7 +9,7 @@
   <meta name="apple-mobile-web-app-title" content="DANGO" />
   <meta name="description" content="DANGO — ビンゴ大会のカード選択をもっとかんたんに。" />
   <meta name="dango-app" content="dango-card-picker-v9-stable-updates" />
-  <meta name="dango-app-version" content="9" />
+  <meta name="dango-app-version" content="10" />
   <title>DANGO | ビンゴをもっとたのしく。</title>
   <link rel="icon" type="image/png" href="./dango_icon.png" />
   <link rel="apple-touch-icon" href="./dango_icon.png" />
@@ -31,6 +31,7 @@
     button {font:inherit; -webkit-tap-highlight-color:transparent; cursor:pointer; touch-action:manipulation}
     button:focus-visible {outline:3px solid #7146cc;outline-offset:3px}
     [hidden] {display:none !important}
+    .dango-copyright{margin:20px auto 5px;text-align:center;font-size:11px;font-weight:700;letter-spacing:.03em;color:#957f89}
     .wrap {max-width:920px;margin:0 auto;padding:24px 18px 46px}
     .hero {display:flex;align-items:center;gap:18px;padding:12px 4px 25px}
     .brand {min-width:0}
@@ -141,7 +142,7 @@
   </style>
 </head>
 <body>
-  <div id="app" data-dango-app="v9"></div>
+  <div id="app" data-dango-app="v10"></div>
   <script>
     'use strict';
     // DANGO card picker v4. D-type No.151-200 and E-type No.201-250 transcribed from real photographs. No external source of numbers.
@@ -160,7 +161,7 @@
       <main class="wrap">
         <header class="hero">
           <div class="brand"><h1 aria-label="DANGO"><span aria-hidden="true">D</span><span aria-hidden="true">A</span><span aria-hidden="true">N</span><span aria-hidden="true">G</span><span aria-hidden="true">O</span></h1><p>ビンゴを、もっとたのしく。</p></div>
-          <div class="hero-tools"><a class="settings-link" href="./setting.html?from=cards">⚙ 設定</a><span class="version-pill">DANGO v9</span></div>
+          <div class="hero-tools"><a class="settings-link" href="./setting.html?from=cards">⚙ 設定</a><span class="version-pill">DANGO v10</span></div>
         </header>
         <section class="panel" aria-labelledby="pageTitle">
           <div class="intro">
@@ -187,6 +188,7 @@
           <div id="dataNotice" class="notice" hidden></div>
         </section>
         <p class="footer">選択したカード番号は、この端末に自動保存されます。<br>別端末への同期は今後の開発で対応予定です。</p>
+        <footer class="dango-copyright">© 2021–2026 dobhar-chu</footer>
       </main>
       <div id="toast" class="toast" role="status" hidden></div>
       <div id="updateBar" class="update-bar" hidden><span>✨ DANGOの最新版があります</span><button id="updateNow" type="button">今すぐ更新</button></div>
@@ -352,10 +354,10 @@
 
     // バージョン番号で比較する。DOM全体の比較ではSafariの履歴復元やCDNの旧版で誤通知が出る。
     // index.html を更新するときは、meta[name="dango-app-version"] を必ず増やす。
-    const APP_VERSION = 9;
+    const APP_VERSION = 10;
     let checkingUpdate = false;
     let newerVersion = 0;
-    const UPDATE_ATTEMPT_KEY = 'dango.updateAttempt.v9';
+    const UPDATE_ATTEMPT_KEY = 'dango.updateAttempt.v10';
 
     function reloadFresh() {
       const url = new URL('./index.html',document.baseURI);
