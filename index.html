@@ -9,7 +9,7 @@
   <meta name="apple-mobile-web-app-title" content="DANGO" />
   <meta name="description" content="DANGO — ビンゴ大会のカード選択をもっとかんたんに。" />
   <meta name="dango-app" content="dango-card-picker-v9-stable-updates" />
-  <meta name="dango-app-version" content="11" />
+  <meta name="dango-app-version" content="12" />
   <title>DANGO | ビンゴをもっとたのしく。</title>
   <link rel="icon" type="image/png" href="./dango_icon.png" />
   <link rel="apple-touch-icon" href="./dango_icon.png" />
@@ -139,7 +139,14 @@
       .card-select.selected:before {height:17px;width:17px;font-size:10px}
     }
     @media (prefers-reduced-motion:reduce) {*,*:before,*:after {transition:none!important;scroll-behavior:auto!important}}
-  </style>
+  
+    /* Official text logo and bottom-centered copyright */
+    .brand h1:after{content:none}
+    .brand h1 .dango-logo{display:block;width:clamp(175px,32vw,265px);max-width:100%;height:auto}
+    #app{min-height:100dvh;display:flex;flex-direction:column}
+    #app>.wrap{width:100%;min-height:100dvh;display:flex;flex-direction:column}
+    #app .dango-copyright{margin-top:auto;padding-top:20px}
+</style>
 </head>
 <body>
   <div id="app" data-dango-app="v10"></div>
@@ -160,8 +167,8 @@
     app.innerHTML = `
       <main class="wrap">
         <header class="hero">
-          <div class="brand"><h1 aria-label="DANGO"><span aria-hidden="true">D</span><span aria-hidden="true">A</span><span aria-hidden="true">N</span><span aria-hidden="true">G</span><span aria-hidden="true">O</span></h1><p>ビンゴを、もっとたのしく。</p></div>
-          <div class="hero-tools"><a class="settings-link" href="./setting.html?from=cards">⚙ 設定</a><span class="version-pill">DANGO v10</span></div>
+          <div class="brand"><h1 aria-label="DANGO"><img src="./DANGO_text_logo.png" alt="DANGO" class="dango-logo"></h1><p>ビンゴを、もっとたのしく。</p></div>
+          <div class="hero-tools"><a class="settings-link" href="./setting.html?from=cards">⚙ 設定</a><span class="version-pill">DANGO v12</span></div>
         </header>
         <section class="panel" aria-labelledby="pageTitle">
           <div class="intro">
@@ -189,7 +196,7 @@
           <div id="dataNotice" class="notice" hidden></div>
         </section>
         <p class="footer">選択したカード番号は、この端末に自動保存されます。<br>別端末で当選結果を見る場合は、抽選担当が「端末連携」で発行したゲームIDを入力します。</p>
-        <footer class="dango-copyright">© 2021–2026 dobhar-chu</footer>
+        <footer class="dango-copyright">© 2021–2026 Dobhar-chú</footer>
       </main>
       <div id="toast" class="toast" role="status" hidden></div>
       <div id="updateBar" class="update-bar" hidden><span>✨ DANGOの最新版があります</span><button id="updateNow" type="button">今すぐ更新</button></div>
@@ -358,7 +365,7 @@
     const APP_VERSION = 11;
     let checkingUpdate = false;
     let newerVersion = 0;
-    const UPDATE_ATTEMPT_KEY = 'dango.updateAttempt.v11';
+    const UPDATE_ATTEMPT_KEY = 'dango.updateAttempt.v12';
 
     function reloadFresh() {
       const url = new URL('./index.html',document.baseURI);
